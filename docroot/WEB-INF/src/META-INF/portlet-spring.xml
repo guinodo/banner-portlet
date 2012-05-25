@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" default-destroy-method="destroy" default-init-method="afterPropertiesSet" xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
+	<bean id="br.com.seatecnologia.banner.service.BannerLocalService" class="br.com.seatecnologia.banner.service.impl.BannerLocalServiceImpl" />
+	<bean id="br.com.seatecnologia.banner.service.BannerLocalServiceUtil" class="br.com.seatecnologia.banner.service.BannerLocalServiceUtil">
+		<property name="service" ref="br.com.seatecnologia.banner.service.BannerLocalService" />
+	</bean>
+	<bean id="br.com.seatecnologia.banner.service.persistence.BannerPersistence" class="br.com.seatecnologia.banner.service.persistence.BannerPersistenceImpl" parent="basePersistence" />
+</beans>
