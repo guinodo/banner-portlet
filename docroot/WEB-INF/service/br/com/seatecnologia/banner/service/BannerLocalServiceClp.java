@@ -84,10 +84,20 @@ public class BannerLocalServiceClp implements BannerLocalService {
 		_getBannersByGroupIdMethodKey16 = new MethodKey(_classLoaderProxy.getClassName(),
 				"getBannersByGroupId", long.class, int.class, int.class);
 
-		_getBannersByStatusMethodKey17 = new MethodKey(_classLoaderProxy.getClassName(),
+		_getBannersByStatusGroupIdMethodKey17 = new MethodKey(_classLoaderProxy.getClassName(),
+				"getBannersByStatusGroupId", int.class, long.class, int.class,
+				int.class);
+
+		_getBannersByStatusMethodKey18 = new MethodKey(_classLoaderProxy.getClassName(),
 				"getBannersByStatus", int.class);
 
-		_getCoutBannersByGroupIdMethodKey18 = new MethodKey(_classLoaderProxy.getClassName(),
+		_getBannerByPositionMethodKey19 = new MethodKey(_classLoaderProxy.getClassName(),
+				"getBannerByPosition", int.class);
+
+		_getBannersByStatusCountMethodKey20 = new MethodKey(_classLoaderProxy.getClassName(),
+				"getBannersByStatusCount", int.class);
+
+		_getCoutBannersByGroupIdMethodKey21 = new MethodKey(_classLoaderProxy.getClassName(),
 				"getCoutBannersByGroupId", long.class);
 	}
 
@@ -552,11 +562,39 @@ public class BannerLocalServiceClp implements BannerLocalService {
 		return (java.util.List<br.com.seatecnologia.banner.model.Banner>)ClpSerializer.translateOutput(returnObj);
 	}
 
+	public java.util.List<br.com.seatecnologia.banner.model.Banner> getBannersByStatusGroupId(
+		int status, long groupId, int start, int end)
+		throws com.liferay.portal.kernel.exception.SystemException {
+		Object returnObj = null;
+
+		MethodHandler methodHandler = new MethodHandler(_getBannersByStatusGroupIdMethodKey17,
+				status, groupId, start, end);
+
+		try {
+			returnObj = _classLoaderProxy.invoke(methodHandler);
+		}
+		catch (Throwable t) {
+			if (t instanceof com.liferay.portal.kernel.exception.SystemException) {
+				throw (com.liferay.portal.kernel.exception.SystemException)t;
+			}
+
+			if (t instanceof RuntimeException) {
+				throw (RuntimeException)t;
+			}
+			else {
+				throw new RuntimeException(t.getClass().getName() +
+					" is not a valid exception");
+			}
+		}
+
+		return (java.util.List<br.com.seatecnologia.banner.model.Banner>)ClpSerializer.translateOutput(returnObj);
+	}
+
 	public java.util.List<br.com.seatecnologia.banner.model.Banner> getBannersByStatus(
 		int status) throws com.liferay.portal.kernel.exception.SystemException {
 		Object returnObj = null;
 
-		MethodHandler methodHandler = new MethodHandler(_getBannersByStatusMethodKey17,
+		MethodHandler methodHandler = new MethodHandler(_getBannersByStatusMethodKey18,
 				status);
 
 		try {
@@ -579,11 +617,71 @@ public class BannerLocalServiceClp implements BannerLocalService {
 		return (java.util.List<br.com.seatecnologia.banner.model.Banner>)ClpSerializer.translateOutput(returnObj);
 	}
 
+	public br.com.seatecnologia.banner.model.Banner getBannerByPosition(
+		int position)
+		throws br.com.seatecnologia.banner.NoSuchBannerException,
+			com.liferay.portal.kernel.exception.SystemException {
+		Object returnObj = null;
+
+		MethodHandler methodHandler = new MethodHandler(_getBannerByPositionMethodKey19,
+				position);
+
+		try {
+			returnObj = _classLoaderProxy.invoke(methodHandler);
+		}
+		catch (Throwable t) {
+			if (t instanceof br.com.seatecnologia.banner.NoSuchBannerException) {
+				throw (br.com.seatecnologia.banner.NoSuchBannerException)t;
+			}
+
+			if (t instanceof com.liferay.portal.kernel.exception.SystemException) {
+				throw (com.liferay.portal.kernel.exception.SystemException)t;
+			}
+
+			if (t instanceof RuntimeException) {
+				throw (RuntimeException)t;
+			}
+			else {
+				throw new RuntimeException(t.getClass().getName() +
+					" is not a valid exception");
+			}
+		}
+
+		return (br.com.seatecnologia.banner.model.Banner)ClpSerializer.translateOutput(returnObj);
+	}
+
+	public int getBannersByStatusCount(int status)
+		throws com.liferay.portal.kernel.exception.SystemException {
+		Object returnObj = null;
+
+		MethodHandler methodHandler = new MethodHandler(_getBannersByStatusCountMethodKey20,
+				status);
+
+		try {
+			returnObj = _classLoaderProxy.invoke(methodHandler);
+		}
+		catch (Throwable t) {
+			if (t instanceof com.liferay.portal.kernel.exception.SystemException) {
+				throw (com.liferay.portal.kernel.exception.SystemException)t;
+			}
+
+			if (t instanceof RuntimeException) {
+				throw (RuntimeException)t;
+			}
+			else {
+				throw new RuntimeException(t.getClass().getName() +
+					" is not a valid exception");
+			}
+		}
+
+		return ((Integer)returnObj).intValue();
+	}
+
 	public int getCoutBannersByGroupId(long groupId)
 		throws com.liferay.portal.kernel.exception.SystemException {
 		Object returnObj = null;
 
-		MethodHandler methodHandler = new MethodHandler(_getCoutBannersByGroupIdMethodKey18,
+		MethodHandler methodHandler = new MethodHandler(_getCoutBannersByGroupIdMethodKey21,
 				groupId);
 
 		try {
@@ -628,6 +726,9 @@ public class BannerLocalServiceClp implements BannerLocalService {
 	private MethodKey _getBeanIdentifierMethodKey14;
 	private MethodKey _setBeanIdentifierMethodKey15;
 	private MethodKey _getBannersByGroupIdMethodKey16;
-	private MethodKey _getBannersByStatusMethodKey17;
-	private MethodKey _getCoutBannersByGroupIdMethodKey18;
+	private MethodKey _getBannersByStatusGroupIdMethodKey17;
+	private MethodKey _getBannersByStatusMethodKey18;
+	private MethodKey _getBannerByPositionMethodKey19;
+	private MethodKey _getBannersByStatusCountMethodKey20;
+	private MethodKey _getCoutBannersByGroupIdMethodKey21;
 }

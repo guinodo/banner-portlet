@@ -31,14 +31,12 @@
 			<portlet:param name="bannerId"
 				value="<%= String.valueOf(bannerId) %>" />
 			<portlet:param name="status" value="<%= String.valueOf(BannerKeys.INACTIVE) %>" />
-			<portlet:param name="redirect" value="<%= redirect %>" />
 		</portlet:actionURL>
 
 		<portlet:actionURL name="updateStatus" var="activeURL">
 			<portlet:param name="bannerId"
 				value="<%= String.valueOf(bannerId) %>" />
 			<portlet:param name="status" value="<%= String.valueOf(BannerKeys.ACTIVATED) %>" />
-			<portlet:param name="redirect" value="<%= redirect %>" />
 		</portlet:actionURL>
 
 		<portlet:renderURL var="editURL">

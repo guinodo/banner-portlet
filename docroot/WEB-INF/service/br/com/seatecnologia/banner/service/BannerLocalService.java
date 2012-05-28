@@ -227,8 +227,23 @@ public interface BannerLocalService extends PersistedModelLocalService {
 		throws com.liferay.portal.kernel.exception.SystemException;
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public java.util.List<br.com.seatecnologia.banner.model.Banner> getBannersByStatusGroupId(
+		int status, long groupId, int start, int end)
+		throws com.liferay.portal.kernel.exception.SystemException;
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public java.util.List<br.com.seatecnologia.banner.model.Banner> getBannersByStatus(
 		int status) throws com.liferay.portal.kernel.exception.SystemException;
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public br.com.seatecnologia.banner.model.Banner getBannerByPosition(
+		int position)
+		throws br.com.seatecnologia.banner.NoSuchBannerException,
+			com.liferay.portal.kernel.exception.SystemException;
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public int getBannersByStatusCount(int status)
+		throws com.liferay.portal.kernel.exception.SystemException;
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public int getCoutBannersByGroupId(long groupId)

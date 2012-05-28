@@ -255,9 +255,28 @@ public class BannerLocalServiceUtil {
 		return getService().getBannersByGroupId(groupId, start, end);
 	}
 
+	public static java.util.List<br.com.seatecnologia.banner.model.Banner> getBannersByStatusGroupId(
+		int status, long groupId, int start, int end)
+		throws com.liferay.portal.kernel.exception.SystemException {
+		return getService()
+				   .getBannersByStatusGroupId(status, groupId, start, end);
+	}
+
 	public static java.util.List<br.com.seatecnologia.banner.model.Banner> getBannersByStatus(
 		int status) throws com.liferay.portal.kernel.exception.SystemException {
 		return getService().getBannersByStatus(status);
+	}
+
+	public static br.com.seatecnologia.banner.model.Banner getBannerByPosition(
+		int position)
+		throws br.com.seatecnologia.banner.NoSuchBannerException,
+			com.liferay.portal.kernel.exception.SystemException {
+		return getService().getBannerByPosition(position);
+	}
+
+	public static int getBannersByStatusCount(int status)
+		throws com.liferay.portal.kernel.exception.SystemException {
+		return getService().getBannersByStatusCount(status);
 	}
 
 	public static int getCoutBannersByGroupId(long groupId)

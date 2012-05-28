@@ -55,8 +55,12 @@ if(banners.size()>0){
 }else{
 	
 	renderRequest.setAttribute(WebKeys.PORTLET_CONFIGURATOR_VISIBILITY, Boolean.TRUE);
+%>
+	<div class="portlet-msg-info">
+		<liferay-ui:message key="select-existing-banenr-or-add-some-banner-to-be-displayed-in-this-portlet" />
+	</div>
+<%
 }
-
 %>
 
 <portlet:renderURL windowState="<%= WindowState.MAXIMIZED.toString() %>" var="addArticleURL">

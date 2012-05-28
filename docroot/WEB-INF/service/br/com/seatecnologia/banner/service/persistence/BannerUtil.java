@@ -309,6 +309,135 @@ public class BannerUtil {
 	}
 
 	/**
+	* Finds all the banners where status = &#63; and groupId = &#63;.
+	*
+	* @param status the status to search with
+	* @param groupId the group ID to search with
+	* @return the matching banners
+	* @throws SystemException if a system exception occurred
+	*/
+	public static java.util.List<br.com.seatecnologia.banner.model.Banner> findByStatusGroupId(
+		int status, long groupId)
+		throws com.liferay.portal.kernel.exception.SystemException {
+		return getPersistence().findByStatusGroupId(status, groupId);
+	}
+
+	/**
+	* Finds a range of all the banners where status = &#63; and groupId = &#63;.
+	*
+	* <p>
+	* Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link com.liferay.portal.kernel.dao.orm.QueryUtil#ALL_POS} will return the full result set.
+	* </p>
+	*
+	* @param status the status to search with
+	* @param groupId the group ID to search with
+	* @param start the lower bound of the range of banners to return
+	* @param end the upper bound of the range of banners to return (not inclusive)
+	* @return the range of matching banners
+	* @throws SystemException if a system exception occurred
+	*/
+	public static java.util.List<br.com.seatecnologia.banner.model.Banner> findByStatusGroupId(
+		int status, long groupId, int start, int end)
+		throws com.liferay.portal.kernel.exception.SystemException {
+		return getPersistence().findByStatusGroupId(status, groupId, start, end);
+	}
+
+	/**
+	* Finds an ordered range of all the banners where status = &#63; and groupId = &#63;.
+	*
+	* <p>
+	* Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link com.liferay.portal.kernel.dao.orm.QueryUtil#ALL_POS} will return the full result set.
+	* </p>
+	*
+	* @param status the status to search with
+	* @param groupId the group ID to search with
+	* @param start the lower bound of the range of banners to return
+	* @param end the upper bound of the range of banners to return (not inclusive)
+	* @param orderByComparator the comparator to order the results by
+	* @return the ordered range of matching banners
+	* @throws SystemException if a system exception occurred
+	*/
+	public static java.util.List<br.com.seatecnologia.banner.model.Banner> findByStatusGroupId(
+		int status, long groupId, int start, int end,
+		com.liferay.portal.kernel.util.OrderByComparator orderByComparator)
+		throws com.liferay.portal.kernel.exception.SystemException {
+		return getPersistence()
+				   .findByStatusGroupId(status, groupId, start, end,
+			orderByComparator);
+	}
+
+	/**
+	* Finds the first banner in the ordered set where status = &#63; and groupId = &#63;.
+	*
+	* <p>
+	* Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link com.liferay.portal.kernel.dao.orm.QueryUtil#ALL_POS} will return the full result set.
+	* </p>
+	*
+	* @param status the status to search with
+	* @param groupId the group ID to search with
+	* @param orderByComparator the comparator to order the set by
+	* @return the first matching banner
+	* @throws br.com.seatecnologia.banner.NoSuchBannerException if a matching banner could not be found
+	* @throws SystemException if a system exception occurred
+	*/
+	public static br.com.seatecnologia.banner.model.Banner findByStatusGroupId_First(
+		int status, long groupId,
+		com.liferay.portal.kernel.util.OrderByComparator orderByComparator)
+		throws br.com.seatecnologia.banner.NoSuchBannerException,
+			com.liferay.portal.kernel.exception.SystemException {
+		return getPersistence()
+				   .findByStatusGroupId_First(status, groupId, orderByComparator);
+	}
+
+	/**
+	* Finds the last banner in the ordered set where status = &#63; and groupId = &#63;.
+	*
+	* <p>
+	* Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link com.liferay.portal.kernel.dao.orm.QueryUtil#ALL_POS} will return the full result set.
+	* </p>
+	*
+	* @param status the status to search with
+	* @param groupId the group ID to search with
+	* @param orderByComparator the comparator to order the set by
+	* @return the last matching banner
+	* @throws br.com.seatecnologia.banner.NoSuchBannerException if a matching banner could not be found
+	* @throws SystemException if a system exception occurred
+	*/
+	public static br.com.seatecnologia.banner.model.Banner findByStatusGroupId_Last(
+		int status, long groupId,
+		com.liferay.portal.kernel.util.OrderByComparator orderByComparator)
+		throws br.com.seatecnologia.banner.NoSuchBannerException,
+			com.liferay.portal.kernel.exception.SystemException {
+		return getPersistence()
+				   .findByStatusGroupId_Last(status, groupId, orderByComparator);
+	}
+
+	/**
+	* Finds the banners before and after the current banner in the ordered set where status = &#63; and groupId = &#63;.
+	*
+	* <p>
+	* Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link com.liferay.portal.kernel.dao.orm.QueryUtil#ALL_POS} will return the full result set.
+	* </p>
+	*
+	* @param bannerId the primary key of the current banner
+	* @param status the status to search with
+	* @param groupId the group ID to search with
+	* @param orderByComparator the comparator to order the set by
+	* @return the previous, current, and next banner
+	* @throws br.com.seatecnologia.banner.NoSuchBannerException if a banner with the primary key could not be found
+	* @throws SystemException if a system exception occurred
+	*/
+	public static br.com.seatecnologia.banner.model.Banner[] findByStatusGroupId_PrevAndNext(
+		long bannerId, int status, long groupId,
+		com.liferay.portal.kernel.util.OrderByComparator orderByComparator)
+		throws br.com.seatecnologia.banner.NoSuchBannerException,
+			com.liferay.portal.kernel.exception.SystemException {
+		return getPersistence()
+				   .findByStatusGroupId_PrevAndNext(bannerId, status, groupId,
+			orderByComparator);
+	}
+
+	/**
 	* Finds the banner where bannerId = &#63; or throws a {@link br.com.seatecnologia.banner.NoSuchBannerException} if it could not be found.
 	*
 	* @param bannerId the banner ID to search with
@@ -468,6 +597,47 @@ public class BannerUtil {
 	}
 
 	/**
+	* Finds the banner where position = &#63; or throws a {@link br.com.seatecnologia.banner.NoSuchBannerException} if it could not be found.
+	*
+	* @param position the position to search with
+	* @return the matching banner
+	* @throws br.com.seatecnologia.banner.NoSuchBannerException if a matching banner could not be found
+	* @throws SystemException if a system exception occurred
+	*/
+	public static br.com.seatecnologia.banner.model.Banner findByPosition(
+		int position)
+		throws br.com.seatecnologia.banner.NoSuchBannerException,
+			com.liferay.portal.kernel.exception.SystemException {
+		return getPersistence().findByPosition(position);
+	}
+
+	/**
+	* Finds the banner where position = &#63; or returns <code>null</code> if it could not be found. Uses the finder cache.
+	*
+	* @param position the position to search with
+	* @return the matching banner, or <code>null</code> if a matching banner could not be found
+	* @throws SystemException if a system exception occurred
+	*/
+	public static br.com.seatecnologia.banner.model.Banner fetchByPosition(
+		int position)
+		throws com.liferay.portal.kernel.exception.SystemException {
+		return getPersistence().fetchByPosition(position);
+	}
+
+	/**
+	* Finds the banner where position = &#63; or returns <code>null</code> if it could not be found, optionally using the finder cache.
+	*
+	* @param position the position to search with
+	* @return the matching banner, or <code>null</code> if a matching banner could not be found
+	* @throws SystemException if a system exception occurred
+	*/
+	public static br.com.seatecnologia.banner.model.Banner fetchByPosition(
+		int position, boolean retrieveFromCache)
+		throws com.liferay.portal.kernel.exception.SystemException {
+		return getPersistence().fetchByPosition(position, retrieveFromCache);
+	}
+
+	/**
 	* Finds all the banners.
 	*
 	* @return the banners
@@ -528,6 +698,18 @@ public class BannerUtil {
 	}
 
 	/**
+	* Removes all the banners where status = &#63; and groupId = &#63; from the database.
+	*
+	* @param status the status to search with
+	* @param groupId the group ID to search with
+	* @throws SystemException if a system exception occurred
+	*/
+	public static void removeByStatusGroupId(int status, long groupId)
+		throws com.liferay.portal.kernel.exception.SystemException {
+		getPersistence().removeByStatusGroupId(status, groupId);
+	}
+
+	/**
 	* Removes the banner where bannerId = &#63; from the database.
 	*
 	* @param bannerId the banner ID to search with
@@ -548,6 +730,18 @@ public class BannerUtil {
 	public static void removeByStatus(int status)
 		throws com.liferay.portal.kernel.exception.SystemException {
 		getPersistence().removeByStatus(status);
+	}
+
+	/**
+	* Removes the banner where position = &#63; from the database.
+	*
+	* @param position the position to search with
+	* @throws SystemException if a system exception occurred
+	*/
+	public static void removeByPosition(int position)
+		throws br.com.seatecnologia.banner.NoSuchBannerException,
+			com.liferay.portal.kernel.exception.SystemException {
+		getPersistence().removeByPosition(position);
 	}
 
 	/**
@@ -573,6 +767,19 @@ public class BannerUtil {
 	}
 
 	/**
+	* Counts all the banners where status = &#63; and groupId = &#63;.
+	*
+	* @param status the status to search with
+	* @param groupId the group ID to search with
+	* @return the number of matching banners
+	* @throws SystemException if a system exception occurred
+	*/
+	public static int countByStatusGroupId(int status, long groupId)
+		throws com.liferay.portal.kernel.exception.SystemException {
+		return getPersistence().countByStatusGroupId(status, groupId);
+	}
+
+	/**
 	* Counts all the banners where bannerId = &#63;.
 	*
 	* @param bannerId the banner ID to search with
@@ -594,6 +801,18 @@ public class BannerUtil {
 	public static int countByStatus(int status)
 		throws com.liferay.portal.kernel.exception.SystemException {
 		return getPersistence().countByStatus(status);
+	}
+
+	/**
+	* Counts all the banners where position = &#63;.
+	*
+	* @param position the position to search with
+	* @return the number of matching banners
+	* @throws SystemException if a system exception occurred
+	*/
+	public static int countByPosition(int position)
+		throws com.liferay.portal.kernel.exception.SystemException {
+		return getPersistence().countByPosition(position);
 	}
 
 	/**

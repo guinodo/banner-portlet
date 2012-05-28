@@ -18,6 +18,7 @@ import com.liferay.portal.kernel.exception.SystemException;
 
 import java.util.List;
 
+import br.com.seatecnologia.banner.NoSuchBannerException;
 import br.com.seatecnologia.banner.model.Banner;
 import br.com.seatecnologia.banner.service.base.BannerLocalServiceBaseImpl;
 
@@ -41,12 +42,23 @@ public class BannerLocalServiceImpl extends BannerLocalServiceBaseImpl {
 		return bannerPersistence.findByGroupId(groupId, start, end);
 	}
 	
+	public List<Banner> getBannersByStatusGroupId(int status, long groupId, int start, int end) throws SystemException {
+		return bannerPersistence.findByStatusGroupId(status, groupId, start, end);
+	}
+	
 	public List<Banner> getBannersByStatus(int status) throws SystemException {
 		return bannerPersistence.findByStatus(status);
 	}
 	
+	public Banner getBannerByPosition(int position) throws SystemException, NoSuchBannerException {
+		return bannerPersistence.findByPosition(position);
+	}
+	
+	public int getBannersByStatusCount(int status) throws SystemException {
+		return bannerPersistence.countByStatus(status);
+	}
+	
 	public int getCoutBannersByGroupId(long groupId) throws SystemException{
-		return bannerPersistence.countByGroupId(groupId);
-		
+		return bannerPersistence.countByGroupId(groupId);	
 	}
 }

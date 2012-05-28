@@ -65,7 +65,7 @@ long groupId = ParamUtil.getLong(request, "groupId", scopeGroupId);
 		value='<%= banner == null ? "" : banner.getLink() %>'
 	/>
 	
-	<liferay-ui:error key="banner-image-required"
+	<%-- <liferay-ui:error key="banner-image-required"
 			message="banner-image-required" />
 	<aui:input type="file" name="image" label="image"
 		value='<%= banner == null ? "" : banner.getImage() %>'
@@ -73,10 +73,11 @@ long groupId = ParamUtil.getLong(request, "groupId", scopeGroupId);
 	
 	<aui:input name="position" label="position"
 		value='<%= banner == null ? "" : banner.getPosition() %>'
-	/>
+	/> --%>
 		
  	<div dataType="image_gallery">
-			<aui:input cssClass="lfr-input-text-container" inlineField="<%= true %>" label="" name="text" size="55" type="text" />
+ 			<liferay-ui:error key="banner-image-required" message="banner-image-required" />
+			<aui:input cssClass="lfr-input-text-container" inlineField="<%= true %>" label="" name="image" size="55" type="text" />
 
 			<portlet:renderURL windowState="<%= LiferayWindowState.POP_UP.toString() %>" var="selectIGURL">
 				<portlet:param name="struts_action" value="/moderacaoportlet/add_banner" />
@@ -89,7 +90,7 @@ long groupId = ParamUtil.getLong(request, "groupId", scopeGroupId);
 			data.put("ImagegalleryUrl", selectIGURL);
 			%>
 
-			<aui:button cssClass="journal-imagegallery-button" data="<%= data %>" value="select" />
+			<aui:button cssClass="journal-imagegallery-button" value="select" />
 	</div> 
 	
 	

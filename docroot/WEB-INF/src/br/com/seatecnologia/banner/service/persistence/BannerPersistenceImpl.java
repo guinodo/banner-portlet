@@ -83,6 +83,19 @@ public class BannerPersistenceImpl extends BasePersistenceImpl<Banner>
 			BannerModelImpl.FINDER_CACHE_ENABLED, Long.class,
 			FINDER_CLASS_NAME_LIST, "countByGroupId",
 			new String[] { Long.class.getName() });
+	public static final FinderPath FINDER_PATH_FIND_BY_STATUSGROUPID = new FinderPath(BannerModelImpl.ENTITY_CACHE_ENABLED,
+			BannerModelImpl.FINDER_CACHE_ENABLED, BannerImpl.class,
+			FINDER_CLASS_NAME_LIST, "findByStatusGroupId",
+			new String[] {
+				Integer.class.getName(), Long.class.getName(),
+				
+			"java.lang.Integer", "java.lang.Integer",
+				"com.liferay.portal.kernel.util.OrderByComparator"
+			});
+	public static final FinderPath FINDER_PATH_COUNT_BY_STATUSGROUPID = new FinderPath(BannerModelImpl.ENTITY_CACHE_ENABLED,
+			BannerModelImpl.FINDER_CACHE_ENABLED, Long.class,
+			FINDER_CLASS_NAME_LIST, "countByStatusGroupId",
+			new String[] { Integer.class.getName(), Long.class.getName() });
 	public static final FinderPath FINDER_PATH_FETCH_BY_BANNERID = new FinderPath(BannerModelImpl.ENTITY_CACHE_ENABLED,
 			BannerModelImpl.FINDER_CACHE_ENABLED, BannerImpl.class,
 			FINDER_CLASS_NAME_ENTITY, "fetchByBannerId",
@@ -104,6 +117,14 @@ public class BannerPersistenceImpl extends BasePersistenceImpl<Banner>
 			BannerModelImpl.FINDER_CACHE_ENABLED, Long.class,
 			FINDER_CLASS_NAME_LIST, "countByStatus",
 			new String[] { Integer.class.getName() });
+	public static final FinderPath FINDER_PATH_FETCH_BY_POSITION = new FinderPath(BannerModelImpl.ENTITY_CACHE_ENABLED,
+			BannerModelImpl.FINDER_CACHE_ENABLED, BannerImpl.class,
+			FINDER_CLASS_NAME_ENTITY, "fetchByPosition",
+			new String[] { Integer.class.getName() });
+	public static final FinderPath FINDER_PATH_COUNT_BY_POSITION = new FinderPath(BannerModelImpl.ENTITY_CACHE_ENABLED,
+			BannerModelImpl.FINDER_CACHE_ENABLED, Long.class,
+			FINDER_CLASS_NAME_LIST, "countByPosition",
+			new String[] { Integer.class.getName() });
 	public static final FinderPath FINDER_PATH_FIND_ALL = new FinderPath(BannerModelImpl.ENTITY_CACHE_ENABLED,
 			BannerModelImpl.FINDER_CACHE_ENABLED, BannerImpl.class,
 			FINDER_CLASS_NAME_LIST, "findAll", new String[0]);
@@ -122,6 +143,9 @@ public class BannerPersistenceImpl extends BasePersistenceImpl<Banner>
 
 		FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_BANNERID,
 			new Object[] { Long.valueOf(banner.getBannerId()) }, banner);
+
+		FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_POSITION,
+			new Object[] { Integer.valueOf(banner.getPosition()) }, banner);
 
 		banner.resetOriginalValues();
 	}
@@ -173,6 +197,9 @@ public class BannerPersistenceImpl extends BasePersistenceImpl<Banner>
 
 		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_BANNERID,
 			new Object[] { Long.valueOf(banner.getBannerId()) });
+
+		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_POSITION,
+			new Object[] { Integer.valueOf(banner.getPosition()) });
 	}
 
 	/**
@@ -281,6 +308,9 @@ public class BannerPersistenceImpl extends BasePersistenceImpl<Banner>
 		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_BANNERID,
 			new Object[] { Long.valueOf(bannerModelImpl.getBannerId()) });
 
+		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_POSITION,
+			new Object[] { Integer.valueOf(bannerModelImpl.getPosition()) });
+
 		EntityCacheUtil.removeResult(BannerModelImpl.ENTITY_CACHE_ENABLED,
 			BannerImpl.class, banner.getPrimaryKey());
 
@@ -328,6 +358,20 @@ public class BannerPersistenceImpl extends BasePersistenceImpl<Banner>
 				(banner.getBannerId() != bannerModelImpl.getOriginalBannerId())) {
 			FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_BANNERID,
 				new Object[] { Long.valueOf(banner.getBannerId()) }, banner);
+		}
+
+		if (!isNew &&
+				(banner.getPosition() != bannerModelImpl.getOriginalPosition())) {
+			FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_POSITION,
+				new Object[] {
+					Integer.valueOf(bannerModelImpl.getOriginalPosition())
+				});
+		}
+
+		if (isNew ||
+				(banner.getPosition() != bannerModelImpl.getOriginalPosition())) {
+			FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_POSITION,
+				new Object[] { Integer.valueOf(banner.getPosition()) }, banner);
 		}
 
 		return banner;
@@ -770,6 +814,367 @@ public class BannerPersistenceImpl extends BasePersistenceImpl<Banner>
 		q.setMaxResults(2);
 
 		QueryPos qPos = QueryPos.getInstance(q);
+
+		qPos.add(groupId);
+
+		if (orderByComparator != null) {
+			Object[] values = orderByComparator.getOrderByValues(banner);
+
+			for (Object value : values) {
+				qPos.add(value);
+			}
+		}
+
+		List<Banner> list = q.list();
+
+		if (list.size() == 2) {
+			return list.get(1);
+		}
+		else {
+			return null;
+		}
+	}
+
+	/**
+	 * Finds all the banners where status = &#63; and groupId = &#63;.
+	 *
+	 * @param status the status to search with
+	 * @param groupId the group ID to search with
+	 * @return the matching banners
+	 * @throws SystemException if a system exception occurred
+	 */
+	public List<Banner> findByStatusGroupId(int status, long groupId)
+		throws SystemException {
+		return findByStatusGroupId(status, groupId, QueryUtil.ALL_POS,
+			QueryUtil.ALL_POS, null);
+	}
+
+	/**
+	 * Finds a range of all the banners where status = &#63; and groupId = &#63;.
+	 *
+	 * <p>
+	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link com.liferay.portal.kernel.dao.orm.QueryUtil#ALL_POS} will return the full result set.
+	 * </p>
+	 *
+	 * @param status the status to search with
+	 * @param groupId the group ID to search with
+	 * @param start the lower bound of the range of banners to return
+	 * @param end the upper bound of the range of banners to return (not inclusive)
+	 * @return the range of matching banners
+	 * @throws SystemException if a system exception occurred
+	 */
+	public List<Banner> findByStatusGroupId(int status, long groupId,
+		int start, int end) throws SystemException {
+		return findByStatusGroupId(status, groupId, start, end, null);
+	}
+
+	/**
+	 * Finds an ordered range of all the banners where status = &#63; and groupId = &#63;.
+	 *
+	 * <p>
+	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link com.liferay.portal.kernel.dao.orm.QueryUtil#ALL_POS} will return the full result set.
+	 * </p>
+	 *
+	 * @param status the status to search with
+	 * @param groupId the group ID to search with
+	 * @param start the lower bound of the range of banners to return
+	 * @param end the upper bound of the range of banners to return (not inclusive)
+	 * @param orderByComparator the comparator to order the results by
+	 * @return the ordered range of matching banners
+	 * @throws SystemException if a system exception occurred
+	 */
+	public List<Banner> findByStatusGroupId(int status, long groupId,
+		int start, int end, OrderByComparator orderByComparator)
+		throws SystemException {
+		Object[] finderArgs = new Object[] {
+				status, groupId,
+				
+				String.valueOf(start), String.valueOf(end),
+				String.valueOf(orderByComparator)
+			};
+
+		List<Banner> list = (List<Banner>)FinderCacheUtil.getResult(FINDER_PATH_FIND_BY_STATUSGROUPID,
+				finderArgs, this);
+
+		if (list == null) {
+			StringBundler query = null;
+
+			if (orderByComparator != null) {
+				query = new StringBundler(4 +
+						(orderByComparator.getOrderByFields().length * 3));
+			}
+			else {
+				query = new StringBundler(4);
+			}
+
+			query.append(_SQL_SELECT_BANNER_WHERE);
+
+			query.append(_FINDER_COLUMN_STATUSGROUPID_STATUS_2);
+
+			query.append(_FINDER_COLUMN_STATUSGROUPID_GROUPID_2);
+
+			if (orderByComparator != null) {
+				appendOrderByComparator(query, _ORDER_BY_ENTITY_ALIAS,
+					orderByComparator);
+			}
+
+			else {
+				query.append(BannerModelImpl.ORDER_BY_JPQL);
+			}
+
+			String sql = query.toString();
+
+			Session session = null;
+
+			try {
+				session = openSession();
+
+				Query q = session.createQuery(sql);
+
+				QueryPos qPos = QueryPos.getInstance(q);
+
+				qPos.add(status);
+
+				qPos.add(groupId);
+
+				list = (List<Banner>)QueryUtil.list(q, getDialect(), start, end);
+			}
+			catch (Exception e) {
+				throw processException(e);
+			}
+			finally {
+				if (list == null) {
+					FinderCacheUtil.removeResult(FINDER_PATH_FIND_BY_STATUSGROUPID,
+						finderArgs);
+				}
+				else {
+					cacheResult(list);
+
+					FinderCacheUtil.putResult(FINDER_PATH_FIND_BY_STATUSGROUPID,
+						finderArgs, list);
+				}
+
+				closeSession(session);
+			}
+		}
+
+		return list;
+	}
+
+	/**
+	 * Finds the first banner in the ordered set where status = &#63; and groupId = &#63;.
+	 *
+	 * <p>
+	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link com.liferay.portal.kernel.dao.orm.QueryUtil#ALL_POS} will return the full result set.
+	 * </p>
+	 *
+	 * @param status the status to search with
+	 * @param groupId the group ID to search with
+	 * @param orderByComparator the comparator to order the set by
+	 * @return the first matching banner
+	 * @throws br.com.seatecnologia.banner.NoSuchBannerException if a matching banner could not be found
+	 * @throws SystemException if a system exception occurred
+	 */
+	public Banner findByStatusGroupId_First(int status, long groupId,
+		OrderByComparator orderByComparator)
+		throws NoSuchBannerException, SystemException {
+		List<Banner> list = findByStatusGroupId(status, groupId, 0, 1,
+				orderByComparator);
+
+		if (list.isEmpty()) {
+			StringBundler msg = new StringBundler(6);
+
+			msg.append(_NO_SUCH_ENTITY_WITH_KEY);
+
+			msg.append("status=");
+			msg.append(status);
+
+			msg.append(", groupId=");
+			msg.append(groupId);
+
+			msg.append(StringPool.CLOSE_CURLY_BRACE);
+
+			throw new NoSuchBannerException(msg.toString());
+		}
+		else {
+			return list.get(0);
+		}
+	}
+
+	/**
+	 * Finds the last banner in the ordered set where status = &#63; and groupId = &#63;.
+	 *
+	 * <p>
+	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link com.liferay.portal.kernel.dao.orm.QueryUtil#ALL_POS} will return the full result set.
+	 * </p>
+	 *
+	 * @param status the status to search with
+	 * @param groupId the group ID to search with
+	 * @param orderByComparator the comparator to order the set by
+	 * @return the last matching banner
+	 * @throws br.com.seatecnologia.banner.NoSuchBannerException if a matching banner could not be found
+	 * @throws SystemException if a system exception occurred
+	 */
+	public Banner findByStatusGroupId_Last(int status, long groupId,
+		OrderByComparator orderByComparator)
+		throws NoSuchBannerException, SystemException {
+		int count = countByStatusGroupId(status, groupId);
+
+		List<Banner> list = findByStatusGroupId(status, groupId, count - 1,
+				count, orderByComparator);
+
+		if (list.isEmpty()) {
+			StringBundler msg = new StringBundler(6);
+
+			msg.append(_NO_SUCH_ENTITY_WITH_KEY);
+
+			msg.append("status=");
+			msg.append(status);
+
+			msg.append(", groupId=");
+			msg.append(groupId);
+
+			msg.append(StringPool.CLOSE_CURLY_BRACE);
+
+			throw new NoSuchBannerException(msg.toString());
+		}
+		else {
+			return list.get(0);
+		}
+	}
+
+	/**
+	 * Finds the banners before and after the current banner in the ordered set where status = &#63; and groupId = &#63;.
+	 *
+	 * <p>
+	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link com.liferay.portal.kernel.dao.orm.QueryUtil#ALL_POS} will return the full result set.
+	 * </p>
+	 *
+	 * @param bannerId the primary key of the current banner
+	 * @param status the status to search with
+	 * @param groupId the group ID to search with
+	 * @param orderByComparator the comparator to order the set by
+	 * @return the previous, current, and next banner
+	 * @throws br.com.seatecnologia.banner.NoSuchBannerException if a banner with the primary key could not be found
+	 * @throws SystemException if a system exception occurred
+	 */
+	public Banner[] findByStatusGroupId_PrevAndNext(long bannerId, int status,
+		long groupId, OrderByComparator orderByComparator)
+		throws NoSuchBannerException, SystemException {
+		Banner banner = findByPrimaryKey(bannerId);
+
+		Session session = null;
+
+		try {
+			session = openSession();
+
+			Banner[] array = new BannerImpl[3];
+
+			array[0] = getByStatusGroupId_PrevAndNext(session, banner, status,
+					groupId, orderByComparator, true);
+
+			array[1] = banner;
+
+			array[2] = getByStatusGroupId_PrevAndNext(session, banner, status,
+					groupId, orderByComparator, false);
+
+			return array;
+		}
+		catch (Exception e) {
+			throw processException(e);
+		}
+		finally {
+			closeSession(session);
+		}
+	}
+
+	protected Banner getByStatusGroupId_PrevAndNext(Session session,
+		Banner banner, int status, long groupId,
+		OrderByComparator orderByComparator, boolean previous) {
+		StringBundler query = null;
+
+		if (orderByComparator != null) {
+			query = new StringBundler(6 +
+					(orderByComparator.getOrderByFields().length * 6));
+		}
+		else {
+			query = new StringBundler(3);
+		}
+
+		query.append(_SQL_SELECT_BANNER_WHERE);
+
+		query.append(_FINDER_COLUMN_STATUSGROUPID_STATUS_2);
+
+		query.append(_FINDER_COLUMN_STATUSGROUPID_GROUPID_2);
+
+		if (orderByComparator != null) {
+			String[] orderByFields = orderByComparator.getOrderByFields();
+
+			if (orderByFields.length > 0) {
+				query.append(WHERE_AND);
+			}
+
+			for (int i = 0; i < orderByFields.length; i++) {
+				query.append(_ORDER_BY_ENTITY_ALIAS);
+				query.append(orderByFields[i]);
+
+				if ((i + 1) < orderByFields.length) {
+					if (orderByComparator.isAscending() ^ previous) {
+						query.append(WHERE_GREATER_THAN_HAS_NEXT);
+					}
+					else {
+						query.append(WHERE_LESSER_THAN_HAS_NEXT);
+					}
+				}
+				else {
+					if (orderByComparator.isAscending() ^ previous) {
+						query.append(WHERE_GREATER_THAN);
+					}
+					else {
+						query.append(WHERE_LESSER_THAN);
+					}
+				}
+			}
+
+			query.append(ORDER_BY_CLAUSE);
+
+			for (int i = 0; i < orderByFields.length; i++) {
+				query.append(_ORDER_BY_ENTITY_ALIAS);
+				query.append(orderByFields[i]);
+
+				if ((i + 1) < orderByFields.length) {
+					if (orderByComparator.isAscending() ^ previous) {
+						query.append(ORDER_BY_ASC_HAS_NEXT);
+					}
+					else {
+						query.append(ORDER_BY_DESC_HAS_NEXT);
+					}
+				}
+				else {
+					if (orderByComparator.isAscending() ^ previous) {
+						query.append(ORDER_BY_ASC);
+					}
+					else {
+						query.append(ORDER_BY_DESC);
+					}
+				}
+			}
+		}
+
+		else {
+			query.append(BannerModelImpl.ORDER_BY_JPQL);
+		}
+
+		String sql = query.toString();
+
+		Query q = session.createQuery(sql);
+
+		q.setFirstResult(0);
+		q.setMaxResults(2);
+
+		QueryPos qPos = QueryPos.getInstance(q);
+
+		qPos.add(status);
 
 		qPos.add(groupId);
 
@@ -1256,6 +1661,134 @@ public class BannerPersistenceImpl extends BasePersistenceImpl<Banner>
 	}
 
 	/**
+	 * Finds the banner where position = &#63; or throws a {@link br.com.seatecnologia.banner.NoSuchBannerException} if it could not be found.
+	 *
+	 * @param position the position to search with
+	 * @return the matching banner
+	 * @throws br.com.seatecnologia.banner.NoSuchBannerException if a matching banner could not be found
+	 * @throws SystemException if a system exception occurred
+	 */
+	public Banner findByPosition(int position)
+		throws NoSuchBannerException, SystemException {
+		Banner banner = fetchByPosition(position);
+
+		if (banner == null) {
+			StringBundler msg = new StringBundler(4);
+
+			msg.append(_NO_SUCH_ENTITY_WITH_KEY);
+
+			msg.append("position=");
+			msg.append(position);
+
+			msg.append(StringPool.CLOSE_CURLY_BRACE);
+
+			if (_log.isWarnEnabled()) {
+				_log.warn(msg.toString());
+			}
+
+			throw new NoSuchBannerException(msg.toString());
+		}
+
+		return banner;
+	}
+
+	/**
+	 * Finds the banner where position = &#63; or returns <code>null</code> if it could not be found. Uses the finder cache.
+	 *
+	 * @param position the position to search with
+	 * @return the matching banner, or <code>null</code> if a matching banner could not be found
+	 * @throws SystemException if a system exception occurred
+	 */
+	public Banner fetchByPosition(int position) throws SystemException {
+		return fetchByPosition(position, true);
+	}
+
+	/**
+	 * Finds the banner where position = &#63; or returns <code>null</code> if it could not be found, optionally using the finder cache.
+	 *
+	 * @param position the position to search with
+	 * @return the matching banner, or <code>null</code> if a matching banner could not be found
+	 * @throws SystemException if a system exception occurred
+	 */
+	public Banner fetchByPosition(int position, boolean retrieveFromCache)
+		throws SystemException {
+		Object[] finderArgs = new Object[] { position };
+
+		Object result = null;
+
+		if (retrieveFromCache) {
+			result = FinderCacheUtil.getResult(FINDER_PATH_FETCH_BY_POSITION,
+					finderArgs, this);
+		}
+
+		if (result == null) {
+			StringBundler query = new StringBundler(3);
+
+			query.append(_SQL_SELECT_BANNER_WHERE);
+
+			query.append(_FINDER_COLUMN_POSITION_POSITION_2);
+
+			query.append(BannerModelImpl.ORDER_BY_JPQL);
+
+			String sql = query.toString();
+
+			Session session = null;
+
+			try {
+				session = openSession();
+
+				Query q = session.createQuery(sql);
+
+				QueryPos qPos = QueryPos.getInstance(q);
+
+				qPos.add(position);
+
+				List<Banner> list = q.list();
+
+				result = list;
+
+				Banner banner = null;
+
+				if (list.isEmpty()) {
+					FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_POSITION,
+						finderArgs, list);
+				}
+				else {
+					banner = list.get(0);
+
+					cacheResult(banner);
+
+					if ((banner.getPosition() != position)) {
+						FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_POSITION,
+							finderArgs, banner);
+					}
+				}
+
+				return banner;
+			}
+			catch (Exception e) {
+				throw processException(e);
+			}
+			finally {
+				if (result == null) {
+					FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_POSITION,
+						finderArgs);
+				}
+
+				closeSession(session);
+			}
+		}
+		else {
+			if (result instanceof List<?>) {
+				return null;
+			}
+			else {
+				return (Banner)result;
+			}
+		}
+	}
+
+	/**
 	 * Finds all the banners.
 	 *
 	 * @return the banners
@@ -1376,6 +1909,20 @@ public class BannerPersistenceImpl extends BasePersistenceImpl<Banner>
 	}
 
 	/**
+	 * Removes all the banners where status = &#63; and groupId = &#63; from the database.
+	 *
+	 * @param status the status to search with
+	 * @param groupId the group ID to search with
+	 * @throws SystemException if a system exception occurred
+	 */
+	public void removeByStatusGroupId(int status, long groupId)
+		throws SystemException {
+		for (Banner banner : findByStatusGroupId(status, groupId)) {
+			bannerPersistence.remove(banner);
+		}
+	}
+
+	/**
 	 * Removes the banner where bannerId = &#63; from the database.
 	 *
 	 * @param bannerId the banner ID to search with
@@ -1398,6 +1945,19 @@ public class BannerPersistenceImpl extends BasePersistenceImpl<Banner>
 		for (Banner banner : findByStatus(status)) {
 			bannerPersistence.remove(banner);
 		}
+	}
+
+	/**
+	 * Removes the banner where position = &#63; from the database.
+	 *
+	 * @param position the position to search with
+	 * @throws SystemException if a system exception occurred
+	 */
+	public void removeByPosition(int position)
+		throws NoSuchBannerException, SystemException {
+		Banner banner = findByPosition(position);
+
+		bannerPersistence.remove(banner);
 	}
 
 	/**
@@ -1455,6 +2015,65 @@ public class BannerPersistenceImpl extends BasePersistenceImpl<Banner>
 				}
 
 				FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_GROUPID,
+					finderArgs, count);
+
+				closeSession(session);
+			}
+		}
+
+		return count.intValue();
+	}
+
+	/**
+	 * Counts all the banners where status = &#63; and groupId = &#63;.
+	 *
+	 * @param status the status to search with
+	 * @param groupId the group ID to search with
+	 * @return the number of matching banners
+	 * @throws SystemException if a system exception occurred
+	 */
+	public int countByStatusGroupId(int status, long groupId)
+		throws SystemException {
+		Object[] finderArgs = new Object[] { status, groupId };
+
+		Long count = (Long)FinderCacheUtil.getResult(FINDER_PATH_COUNT_BY_STATUSGROUPID,
+				finderArgs, this);
+
+		if (count == null) {
+			StringBundler query = new StringBundler(3);
+
+			query.append(_SQL_COUNT_BANNER_WHERE);
+
+			query.append(_FINDER_COLUMN_STATUSGROUPID_STATUS_2);
+
+			query.append(_FINDER_COLUMN_STATUSGROUPID_GROUPID_2);
+
+			String sql = query.toString();
+
+			Session session = null;
+
+			try {
+				session = openSession();
+
+				Query q = session.createQuery(sql);
+
+				QueryPos qPos = QueryPos.getInstance(q);
+
+				qPos.add(status);
+
+				qPos.add(groupId);
+
+				count = (Long)q.uniqueResult();
+			}
+			catch (Exception e) {
+				throw processException(e);
+			}
+			finally {
+				if (count == null) {
+					count = Long.valueOf(0);
+				}
+
+				FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_STATUSGROUPID,
 					finderArgs, count);
 
 				closeSession(session);
@@ -1571,6 +2190,59 @@ public class BannerPersistenceImpl extends BasePersistenceImpl<Banner>
 	}
 
 	/**
+	 * Counts all the banners where position = &#63;.
+	 *
+	 * @param position the position to search with
+	 * @return the number of matching banners
+	 * @throws SystemException if a system exception occurred
+	 */
+	public int countByPosition(int position) throws SystemException {
+		Object[] finderArgs = new Object[] { position };
+
+		Long count = (Long)FinderCacheUtil.getResult(FINDER_PATH_COUNT_BY_POSITION,
+				finderArgs, this);
+
+		if (count == null) {
+			StringBundler query = new StringBundler(2);
+
+			query.append(_SQL_COUNT_BANNER_WHERE);
+
+			query.append(_FINDER_COLUMN_POSITION_POSITION_2);
+
+			String sql = query.toString();
+
+			Session session = null;
+
+			try {
+				session = openSession();
+
+				Query q = session.createQuery(sql);
+
+				QueryPos qPos = QueryPos.getInstance(q);
+
+				qPos.add(position);
+
+				count = (Long)q.uniqueResult();
+			}
+			catch (Exception e) {
+				throw processException(e);
+			}
+			finally {
+				if (count == null) {
+					count = Long.valueOf(0);
+				}
+
+				FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_POSITION,
+					finderArgs, count);
+
+				closeSession(session);
+			}
+		}
+
+		return count.intValue();
+	}
+
+	/**
 	 * Counts all the banners.
 	 *
 	 * @return the number of banners
@@ -1652,8 +2324,11 @@ public class BannerPersistenceImpl extends BasePersistenceImpl<Banner>
 	private static final String _SQL_COUNT_BANNER = "SELECT COUNT(banner) FROM Banner banner";
 	private static final String _SQL_COUNT_BANNER_WHERE = "SELECT COUNT(banner) FROM Banner banner WHERE ";
 	private static final String _FINDER_COLUMN_GROUPID_GROUPID_2 = "banner.groupId = ?";
+	private static final String _FINDER_COLUMN_STATUSGROUPID_STATUS_2 = "banner.status = ? AND ";
+	private static final String _FINDER_COLUMN_STATUSGROUPID_GROUPID_2 = "banner.groupId = ?";
 	private static final String _FINDER_COLUMN_BANNERID_BANNERID_2 = "banner.bannerId = ?";
 	private static final String _FINDER_COLUMN_STATUS_STATUS_2 = "banner.status = ?";
+	private static final String _FINDER_COLUMN_POSITION_POSITION_2 = "banner.position = ?";
 	private static final String _ORDER_BY_ENTITY_ALIAS = "banner.";
 	private static final String _NO_SUCH_ENTITY_WITH_PRIMARY_KEY = "No Banner exists with the primary key ";
 	private static final String _NO_SUCH_ENTITY_WITH_KEY = "No Banner exists with the key {";

@@ -6,7 +6,7 @@
 
 	<entity name="Banner" local-service="true" remote-service="false" table="Banner">
 		<column name="bannerId" type="long" primary="true" />
-		<column name="name" type="String" />
+		<column name="name" type="String" primary="false"/>
 		<column name="title" type="String" />
 		<column name="description" type="String" />
 		<column name="link" type="String" />
@@ -17,10 +17,16 @@
 		<column name="groupId" type="long" />
 
 		<order by="asc">
-			<order-column name="name" />
+			<order-column name="position" />
 		</order> 
 		
+		
 		<finder name="GroupId" return-type="Collection">
+			<finder-column name="groupId" />
+		</finder>
+
+		<finder name="StatusGroupId" return-type="Collection">
+			<finder-column name="status" />
 			<finder-column name="groupId" />
 		</finder>
 
@@ -30,6 +36,10 @@
 		
 		<finder name="Status" return-type="Collection">
 			<finder-column name="status" />
+		</finder>
+		
+		<finder name="Position" return-type="Banner">
+			<finder-column name="position" />
 		</finder>
 
 	</entity>

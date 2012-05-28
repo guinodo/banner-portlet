@@ -64,8 +64,8 @@ public class BannerModelImpl extends BaseModelImpl<Banner>
 		};
 	public static final String TABLE_SQL_CREATE = "create table Banner (bannerId LONG not null primary key,name VARCHAR(75) null,title VARCHAR(75) null,description VARCHAR(75) null,link VARCHAR(75) null,image VARCHAR(75) null,position INTEGER,type_ INTEGER,status INTEGER,groupId LONG)";
 	public static final String TABLE_SQL_DROP = "drop table Banner";
-	public static final String ORDER_BY_JPQL = " ORDER BY banner.name ASC";
-	public static final String ORDER_BY_SQL = " ORDER BY Banner.name ASC";
+	public static final String ORDER_BY_JPQL = " ORDER BY banner.position ASC";
+	public static final String ORDER_BY_SQL = " ORDER BY Banner.position ASC";
 	public static final String DATA_SOURCE = "liferayDataSource";
 	public static final String SESSION_FACTORY = "liferaySessionFactory";
 	public static final String TX_MANAGER = "liferayTransactionManager";
@@ -194,7 +194,17 @@ public class BannerModelImpl extends BaseModelImpl<Banner>
 	}
 
 	public void setPosition(int position) {
+		if (!_setOriginalPosition) {
+			_setOriginalPosition = true;
+
+			_originalPosition = _position;
+		}
+
 		_position = position;
+	}
+
+	public int getOriginalPosition() {
+		return _originalPosition;
 	}
 
 	public int getType() {
@@ -275,7 +285,15 @@ public class BannerModelImpl extends BaseModelImpl<Banner>
 	public int compareTo(Banner banner) {
 		int value = 0;
 
-		value = getName().compareTo(banner.getName());
+		if (getPosition() < banner.getPosition()) {
+			value = -1;
+		}
+		else if (getPosition() > banner.getPosition()) {
+			value = 1;
+		}
+		else {
+			value = 0;
+		}
 
 		if (value != 0) {
 			return value;
@@ -321,6 +339,10 @@ public class BannerModelImpl extends BaseModelImpl<Banner>
 		bannerModelImpl._originalBannerId = bannerModelImpl._bannerId;
 
 		bannerModelImpl._setOriginalBannerId = false;
+
+		bannerModelImpl._originalPosition = bannerModelImpl._position;
+
+		bannerModelImpl._setOriginalPosition = false;
 	}
 
 	@Override
@@ -475,6 +497,8 @@ public class BannerModelImpl extends BaseModelImpl<Banner>
 	private String _link;
 	private String _image;
 	private int _position;
+	private int _originalPosition;
+	private boolean _setOriginalPosition;
 	private int _type;
 	private int _status;
 	private long _groupId;

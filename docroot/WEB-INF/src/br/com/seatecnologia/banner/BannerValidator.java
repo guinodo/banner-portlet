@@ -29,7 +29,7 @@ public class BannerValidator {
 			valid = false;
 		}
 
-		if (Validator.isEmailAddress(banner.getDescription())) {
+		if (Validator.isNull(banner.getDescription())) {
 			errors.add("banner-description-required");
 			valid = false;
 		}

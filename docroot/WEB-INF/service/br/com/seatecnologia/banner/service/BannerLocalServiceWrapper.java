@@ -247,9 +247,28 @@ public class BannerLocalServiceWrapper implements BannerLocalService {
 		return _bannerLocalService.getBannersByGroupId(groupId, start, end);
 	}
 
+	public java.util.List<br.com.seatecnologia.banner.model.Banner> getBannersByStatusGroupId(
+		int status, long groupId, int start, int end)
+		throws com.liferay.portal.kernel.exception.SystemException {
+		return _bannerLocalService.getBannersByStatusGroupId(status, groupId,
+			start, end);
+	}
+
 	public java.util.List<br.com.seatecnologia.banner.model.Banner> getBannersByStatus(
 		int status) throws com.liferay.portal.kernel.exception.SystemException {
 		return _bannerLocalService.getBannersByStatus(status);
+	}
+
+	public br.com.seatecnologia.banner.model.Banner getBannerByPosition(
+		int position)
+		throws br.com.seatecnologia.banner.NoSuchBannerException,
+			com.liferay.portal.kernel.exception.SystemException {
+		return _bannerLocalService.getBannerByPosition(position);
+	}
+
+	public int getBannersByStatusCount(int status)
+		throws com.liferay.portal.kernel.exception.SystemException {
+		return _bannerLocalService.getBannersByStatusCount(status);
 	}
 
 	public int getCoutBannersByGroupId(long groupId)
