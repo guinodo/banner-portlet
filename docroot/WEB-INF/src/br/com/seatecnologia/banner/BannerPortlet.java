@@ -11,6 +11,8 @@ import com.liferay.portal.kernel.servlet.SessionMessages;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.util.WebKeys;
+import com.liferay.portal.model.PortletPreferences;
+import com.liferay.portal.service.PortletPreferencesLocalServiceUtil;
 import com.liferay.portal.theme.ThemeDisplay;
 import com.liferay.portal.util.PortalUtil;
 import com.liferay.util.bridges.mvc.MVCPortlet;
@@ -27,12 +29,11 @@ import javax.portlet.PortletRequest;
 public class BannerPortlet extends MVCPortlet {
 	
 	public void addBanner(ActionRequest actionRequest, ActionResponse actionResponse) throws Exception{
-		
+				
 		Banner banner = bannerFromRequest(actionRequest);
 		ArrayList<String> errors = new ArrayList<String>();
 		
 		if (BannerValidator.validateBanner(banner, errors)){
-			banner.setPrimaryKey(CounterLocalServiceUtil.increment(BannerPortlet.class.getName()));
 			BannerLocalServiceUtil.addBanner(banner);
 			SessionMessages.add(actionRequest, "manufacturer-added");
 
@@ -120,6 +121,8 @@ public class BannerPortlet extends MVCPortlet {
 		ThemeDisplay themeDisplay = (ThemeDisplay) request.getAttribute(WebKeys.THEME_DISPLAY);
 
 		BannerImpl banner = new BannerImpl();
+		banner.setPrimaryKey(CounterLocalServiceUtil.increment(BannerPortlet.class.getName()));
+		
 		
 		banner.setName(ParamUtil.getString(request, "name"));
 		banner.setTitle(ParamUtil.getString(request, "title"));

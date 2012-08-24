@@ -93,7 +93,7 @@
 
 		<liferay-ui:search-container-column-jsp align="right"
 			path="/html/banner/banner_actions.jsp" />
-	</liferay-ui:search-container-row>
+		</liferay-ui:search-container-row>
 
 	<liferay-ui:search-iterator />
 </liferay-ui:search-container>

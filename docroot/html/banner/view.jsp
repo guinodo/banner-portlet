@@ -22,8 +22,6 @@ String currentURL = PortalUtil.getCurrentURL(request);
 
 List banners = BannerLocalServiceUtil.getBannersByStatus(BannerKeys.ACTIVATED);
 
-System.out.println(banners.size());
-
 if(banners.size()>0){
 %>
 	<div class="banner_estatico">
@@ -31,7 +29,6 @@ if(banners.size()>0){
 	<%
 	for(int i=0; i< banners.size(); i++){
 		Banner banner = (Banner) banners.get(i);
-		System.out.println(i);
 	%>
 	            <div class="banner_content">
 	                <div class="banner_texto">
@@ -80,9 +77,11 @@ if(banners.size()>0){
 </portlet:renderURL>
 
 <liferay-ui:icon
+	cssClass="portlet-configuration"
 	image="configuration"
 	message="configuration"
-	url="<%= listBannnerURL %>"
+	method="get"
+	url="<%= portletDisplay.getURLConfiguration() %>"
 />
 
 <%-- <%@ include file="/html/banner/list_banners.jsp"%> --%>

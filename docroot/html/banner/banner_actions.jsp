@@ -23,7 +23,6 @@
 	long bannerId = banner.getBannerId();
 
 	String redirect = PortalUtil.getCurrentURL(renderRequest);
-	
 %>
 
 <liferay-ui:icon-menu>
@@ -40,12 +39,9 @@
 		</portlet:actionURL>
 
 		<portlet:renderURL var="editURL">
-			<portlet:param name="jspPage"
-				value="/html/banner/edit_banner.jsp" />
-			<portlet:param name="bannerId"
-				value="<%= String.valueOf(bannerId) %>" />
-			<portlet:param name="type"
-				value="<%= String.valueOf(banner.getStatus()) %>" />	
+			<portlet:param name="jspPage" value="/html/banner/edit_banner.jsp" />
+			<portlet:param name="bannerId" value="<%= String.valueOf(bannerId) %>" />
+			<portlet:param name="type" value="<%= String.valueOf(banner.getStatus()) %>" />	
 			<portlet:param name="redirect" value="<%= redirect %>" />
 		</portlet:renderURL>
 

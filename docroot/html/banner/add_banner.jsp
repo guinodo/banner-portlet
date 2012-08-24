@@ -37,7 +37,7 @@ String currentURL = PortalUtil.getCurrentURL(request);
 		<portlet:renderURL var="bannerImage">
 			<portlet:param name="jspPage"
 				value="/html/banner/edit_banner.jsp" />
-			<portlet:param name="type" value="<%= String.valueOf(imageType) %>"/> 
+			<portlet:param name="type" value="<%= String.valueOf(imageType) %>"/>
 			<portlet:param name="redirect" value="<%= currentURL %>" />
 		</portlet:renderURL>
 	

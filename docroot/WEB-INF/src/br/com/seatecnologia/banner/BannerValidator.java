@@ -22,27 +22,19 @@ public class BannerValidator {
 		if (Validator.isNull(banner.getName())) {
 			errors.add("banner-name-required");
 			valid = false;
-		}
-
-		if (Validator.isNull(banner.getTitle())) {
+		}else if (Validator.isNull(banner.getTitle())) {
 			errors.add("banner-title-required");
 			valid = false;
-		}
-
-		if (Validator.isNull(banner.getDescription())) {
+		}else	if (Validator.isNull(banner.getDescription())) {
 			errors.add("banner-description-required");
 			valid = false;
-		}
-
-		if (Validator.isNull(banner.getLink())) {
+		}else if (Validator.isNull(banner.getLink())) {
 			errors.add("banner-link-required");
 			valid = false;
-		}
-		if (Validator.isNull(banner.getStatus())) {
+		}else if (Validator.isNull(banner.getStatus())) {
 			errors.add("banner-status-required");
 			valid = false;
-		}
-		if (Validator.isNull(banner.getImage())) {
+		}else if (Validator.isNull(banner.getImage())) {
 			errors.add("banner-image-required");
 			valid = false;
 		}
