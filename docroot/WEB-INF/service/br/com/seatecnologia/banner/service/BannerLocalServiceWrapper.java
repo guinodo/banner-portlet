@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2000-2010 Liferay, Inc. All rights reserved.
+ * Copyright (c) 2000-2011 Liferay, Inc. All rights reserved.
  *
  * This library is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the Free
@@ -242,38 +242,47 @@ public class BannerLocalServiceWrapper implements BannerLocalService {
 	}
 
 	public java.util.List<br.com.seatecnologia.banner.model.Banner> getBannersByGroupId(
-		long groupId, int start, int end)
+		long groupId, java.lang.String portletId, long plId, int start, int end)
 		throws com.liferay.portal.kernel.exception.SystemException {
-		return _bannerLocalService.getBannersByGroupId(groupId, start, end);
+		return _bannerLocalService.getBannersByGroupId(groupId, portletId,
+			plId, start, end);
 	}
 
 	public java.util.List<br.com.seatecnologia.banner.model.Banner> getBannersByStatusGroupId(
-		int status, long groupId, int start, int end)
+		int status, long groupId, java.lang.String portletId, long plId,
+		int start, int end)
 		throws com.liferay.portal.kernel.exception.SystemException {
 		return _bannerLocalService.getBannersByStatusGroupId(status, groupId,
-			start, end);
+			portletId, plId, start, end);
 	}
 
 	public java.util.List<br.com.seatecnologia.banner.model.Banner> getBannersByStatus(
-		int status) throws com.liferay.portal.kernel.exception.SystemException {
-		return _bannerLocalService.getBannersByStatus(status);
+		int status, long groupId, java.lang.String portletId, long plId)
+		throws com.liferay.portal.kernel.exception.SystemException {
+		return _bannerLocalService.getBannersByStatus(status, groupId,
+			portletId, plId);
 	}
 
 	public br.com.seatecnologia.banner.model.Banner getBannerByPosition(
-		int position)
+		int position, long groupId, java.lang.String portletId, long plId)
 		throws br.com.seatecnologia.banner.NoSuchBannerException,
 			com.liferay.portal.kernel.exception.SystemException {
-		return _bannerLocalService.getBannerByPosition(position);
+		return _bannerLocalService.getBannerByPosition(position, groupId,
+			portletId, plId);
 	}
 
-	public int getBannersByStatusCount(int status)
+	public int getBannersByStatusCount(int status, long groupId,
+		java.lang.String portletId, long plId)
 		throws com.liferay.portal.kernel.exception.SystemException {
-		return _bannerLocalService.getBannersByStatusCount(status);
+		return _bannerLocalService.getBannersByStatusCount(status, groupId,
+			portletId, plId);
 	}
 
-	public int getCoutBannersByGroupId(long groupId)
+	public int getCoutBannersByGroupId(long groupId,
+		java.lang.String portletId, long plId)
 		throws com.liferay.portal.kernel.exception.SystemException {
-		return _bannerLocalService.getCoutBannersByGroupId(groupId);
+		return _bannerLocalService.getCoutBannersByGroupId(groupId, portletId,
+			plId);
 	}
 
 	public BannerLocalService getWrappedBannerLocalService() {

@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2000-2010 Liferay, Inc. All rights reserved.
+ * Copyright (c) 2000-2011 Liferay, Inc. All rights reserved.
  *
  * This library is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the Free
@@ -49,6 +49,11 @@ import java.sql.Types;
  */
 public class BannerModelImpl extends BaseModelImpl<Banner>
 	implements BannerModel {
+	/*
+	 * NOTE FOR DEVELOPERS:
+	 *
+	 * Never modify or reference this class directly. All methods that expect a banner model instance should use the {@link br.com.seatecnologia.banner.model.Banner} interface instead.
+	 */
 	public static final String TABLE_NAME = "Banner";
 	public static final Object[][] TABLE_COLUMNS = {
 			{ "bannerId", Types.BIGINT },
@@ -60,9 +65,11 @@ public class BannerModelImpl extends BaseModelImpl<Banner>
 			{ "position", Types.INTEGER },
 			{ "type_", Types.INTEGER },
 			{ "status", Types.INTEGER },
-			{ "groupId", Types.BIGINT }
+			{ "groupId", Types.BIGINT },
+			{ "portletId", Types.VARCHAR },
+			{ "plId", Types.BIGINT }
 		};
-	public static final String TABLE_SQL_CREATE = "create table Banner (bannerId LONG not null primary key,name VARCHAR(75) null,title VARCHAR(75) null,description VARCHAR(75) null,link VARCHAR(75) null,image VARCHAR(75) null,position INTEGER,type_ INTEGER,status INTEGER,groupId LONG)";
+	public static final String TABLE_SQL_CREATE = "create table Banner (bannerId LONG not null primary key,name VARCHAR(75) null,title VARCHAR(75) null,description VARCHAR(75) null,link VARCHAR(75) null,image VARCHAR(75) null,position INTEGER,type_ INTEGER,status INTEGER,groupId LONG,portletId VARCHAR(75) null,plId LONG)";
 	public static final String TABLE_SQL_DROP = "drop table Banner";
 	public static final String ORDER_BY_JPQL = " ORDER BY banner.position ASC";
 	public static final String ORDER_BY_SQL = " ORDER BY Banner.position ASC";
@@ -228,7 +235,56 @@ public class BannerModelImpl extends BaseModelImpl<Banner>
 	}
 
 	public void setGroupId(long groupId) {
+		if (!_setOriginalGroupId) {
+			_setOriginalGroupId = true;
+
+			_originalGroupId = _groupId;
+		}
+
 		_groupId = groupId;
+	}
+
+	public long getOriginalGroupId() {
+		return _originalGroupId;
+	}
+
+	public String getPortletId() {
+		if (_portletId == null) {
+			return StringPool.BLANK;
+		}
+		else {
+			return _portletId;
+		}
+	}
+
+	public void setPortletId(String portletId) {
+		if (_originalPortletId == null) {
+			_originalPortletId = _portletId;
+		}
+
+		_portletId = portletId;
+	}
+
+	public String getOriginalPortletId() {
+		return GetterUtil.getString(_originalPortletId);
+	}
+
+	public long getPlId() {
+		return _plId;
+	}
+
+	public void setPlId(long plId) {
+		if (!_setOriginalPlId) {
+			_setOriginalPlId = true;
+
+			_originalPlId = _plId;
+		}
+
+		_plId = plId;
+	}
+
+	public long getOriginalPlId() {
+		return _originalPlId;
 	}
 
 	@Override
@@ -276,6 +332,8 @@ public class BannerModelImpl extends BaseModelImpl<Banner>
 		bannerImpl.setType(getType());
 		bannerImpl.setStatus(getStatus());
 		bannerImpl.setGroupId(getGroupId());
+		bannerImpl.setPortletId(getPortletId());
+		bannerImpl.setPlId(getPlId());
 
 		bannerImpl.resetOriginalValues();
 
@@ -343,6 +401,16 @@ public class BannerModelImpl extends BaseModelImpl<Banner>
 		bannerModelImpl._originalPosition = bannerModelImpl._position;
 
 		bannerModelImpl._setOriginalPosition = false;
+
+		bannerModelImpl._originalGroupId = bannerModelImpl._groupId;
+
+		bannerModelImpl._setOriginalGroupId = false;
+
+		bannerModelImpl._originalPortletId = bannerModelImpl._portletId;
+
+		bannerModelImpl._originalPlId = bannerModelImpl._plId;
+
+		bannerModelImpl._setOriginalPlId = false;
 	}
 
 	@Override
@@ -399,12 +467,22 @@ public class BannerModelImpl extends BaseModelImpl<Banner>
 
 		bannerCacheModel.groupId = getGroupId();
 
+		bannerCacheModel.portletId = getPortletId();
+
+		String portletId = bannerCacheModel.portletId;
+
+		if ((portletId != null) && (portletId.length() == 0)) {
+			bannerCacheModel.portletId = null;
+		}
+
+		bannerCacheModel.plId = getPlId();
+
 		return bannerCacheModel;
 	}
 
 	@Override
 	public String toString() {
-		StringBundler sb = new StringBundler(21);
+		StringBundler sb = new StringBundler(25);
 
 		sb.append("{bannerId=");
 		sb.append(getBannerId());
@@ -426,13 +504,17 @@ public class BannerModelImpl extends BaseModelImpl<Banner>
 		sb.append(getStatus());
 		sb.append(", groupId=");
 		sb.append(getGroupId());
+		sb.append(", portletId=");
+		sb.append(getPortletId());
+		sb.append(", plId=");
+		sb.append(getPlId());
 		sb.append("}");
 
 		return sb.toString();
 	}
 
 	public String toXmlString() {
-		StringBundler sb = new StringBundler(34);
+		StringBundler sb = new StringBundler(40);
 
 		sb.append("<model><model-name>");
 		sb.append("br.com.seatecnologia.banner.model.Banner");
@@ -478,6 +560,14 @@ public class BannerModelImpl extends BaseModelImpl<Banner>
 			"<column><column-name>groupId</column-name><column-value><![CDATA[");
 		sb.append(getGroupId());
 		sb.append("]]></column-value></column>");
+		sb.append(
+			"<column><column-name>portletId</column-name><column-value><![CDATA[");
+		sb.append(getPortletId());
+		sb.append("]]></column-value></column>");
+		sb.append(
+			"<column><column-name>plId</column-name><column-value><![CDATA[");
+		sb.append(getPlId());
+		sb.append("]]></column-value></column>");
 
 		sb.append("</model>");
 
@@ -502,6 +592,13 @@ public class BannerModelImpl extends BaseModelImpl<Banner>
 	private int _type;
 	private int _status;
 	private long _groupId;
+	private long _originalGroupId;
+	private boolean _setOriginalGroupId;
+	private String _portletId;
+	private String _originalPortletId;
+	private long _plId;
+	private long _originalPlId;
+	private boolean _setOriginalPlId;
 	private transient ExpandoBridge _expandoBridge;
 	private Banner _escapedModelProxy;
 }

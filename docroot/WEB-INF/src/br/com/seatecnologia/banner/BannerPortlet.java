@@ -16,6 +16,7 @@ import com.liferay.portal.service.PortletPreferencesLocalServiceUtil;
 import com.liferay.portal.theme.ThemeDisplay;
 import com.liferay.portal.util.PortalUtil;
 import com.liferay.util.bridges.mvc.MVCPortlet;
+import com.liferay.util.portlet.PortletProps;
 
 import java.util.ArrayList;
 
@@ -61,10 +62,10 @@ public class BannerPortlet extends MVCPortlet {
 			banner.setStatus(status);
 				if (status==BannerKeys.INACTIVE)
 					banner.setPosition(0);
-				else
-					banner.setPosition(BannerLocalServiceUtil.getBannersByStatusCount(BannerKeys.ACTIVATED)+1);		
-			
-			BannerLocalServiceUtil.updateBanner(banner);
+//				else
+//					banner.setPosition(BannerLocalServiceUtil.getBannersByStatusCount(BannerKeys.ACTIVATED)+1);		
+
+				BannerLocalServiceUtil.updateBanner(banner);
 		} catch (Exception e) {
 			SessionErrors.add(request, "nao-foi-possivel-atualizar-o-status");
 			e.printStackTrace();
@@ -98,19 +99,19 @@ public class BannerPortlet extends MVCPortlet {
 	
 	public void updatePosition (ActionRequest request, ActionResponse response) throws Exception  {
 		
-		int position = ParamUtil.getInteger(request, "position");
-		int position2 = ParamUtil.getInteger(request, "position2");
-				
-		Banner actualBannerPos = BannerLocalServiceUtil.getBannerByPosition(position);
-		Banner modiffiBannerPos = BannerLocalServiceUtil.getBannerByPosition(position2);	
-		
-		actualBannerPos.setPosition(position2);
-		modiffiBannerPos.setPosition(position);
-		
-		BannerLocalServiceUtil.updateBanner(actualBannerPos);
-		BannerLocalServiceUtil.updateBanner(modiffiBannerPos);
-		
-		System.out.println("position "+position);
+//		int position = ParamUtil.getInteger(request, "position");
+//		int position2 = ParamUtil.getInteger(request, "position2");
+//				
+//		Banner actualBannerPos = BannerLocalServiceUtil.getBannerByPosition(position);
+//		Banner modiffiBannerPos = BannerLocalServiceUtil.getBannerByPosition(position2);	
+//		
+//		actualBannerPos.setPosition(position2);
+//		modiffiBannerPos.setPosition(position);
+//		
+//		BannerLocalServiceUtil.updateBanner(actualBannerPos);
+//		BannerLocalServiceUtil.updateBanner(modiffiBannerPos);
+//		
+//		System.out.println("position "+position);
 		
 		
 //		System.out.println("bannerlist "+banners.size());
@@ -119,10 +120,10 @@ public class BannerPortlet extends MVCPortlet {
 	
 	private BannerImpl bannerFromRequest(PortletRequest request) throws SystemException {
 		ThemeDisplay themeDisplay = (ThemeDisplay) request.getAttribute(WebKeys.THEME_DISPLAY);
-
+		PortletPreferences portletPreferences = (PortletPreferences) request.getPreferences();
+		
 		BannerImpl banner = new BannerImpl();
 		banner.setPrimaryKey(CounterLocalServiceUtil.increment(BannerPortlet.class.getName()));
-		
 		
 		banner.setName(ParamUtil.getString(request, "name"));
 		banner.setTitle(ParamUtil.getString(request, "title"));
@@ -132,6 +133,8 @@ public class BannerPortlet extends MVCPortlet {
 		banner.setPosition(BannerLocalServiceUtil.getBannersCount()+1);
 		banner.setType(ParamUtil.getInteger(request, "type"));
 		banner.setGroupId(themeDisplay.getScopeGroupId());
+		banner.setPortletId(portletPreferences.getPortletId());
+		banner.setPlId(portletPreferences.getPlid());
 		
 		return banner;
 	}

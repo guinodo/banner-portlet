@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2000-2010 Liferay, Inc. All rights reserved.
+ * Copyright (c) 2000-2011 Liferay, Inc. All rights reserved.
  *
  * This library is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the Free
@@ -232,6 +232,42 @@ public class BannerWrapper implements Banner {
 	*/
 	public void setGroupId(long groupId) {
 		_banner.setGroupId(groupId);
+	}
+
+	/**
+	* Gets the portlet ID of this banner.
+	*
+	* @return the portlet ID of this banner
+	*/
+	public java.lang.String getPortletId() {
+		return _banner.getPortletId();
+	}
+
+	/**
+	* Sets the portlet ID of this banner.
+	*
+	* @param portletId the portlet ID of this banner
+	*/
+	public void setPortletId(java.lang.String portletId) {
+		_banner.setPortletId(portletId);
+	}
+
+	/**
+	* Gets the pl ID of this banner.
+	*
+	* @return the pl ID of this banner
+	*/
+	public long getPlId() {
+		return _banner.getPlId();
+	}
+
+	/**
+	* Sets the pl ID of this banner.
+	*
+	* @param plId the pl ID of this banner
+	*/
+	public void setPlId(long plId) {
+		_banner.setPlId(plId);
 	}
 
 	public boolean isNew() {

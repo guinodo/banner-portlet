@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2000-2010 Liferay, Inc. All rights reserved.
+ * Copyright (c) 2000-2011 Liferay, Inc. All rights reserved.
  *
  * This library is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the Free
@@ -37,6 +37,12 @@ import java.io.Serializable;
  * @generated
  */
 public interface BannerModel extends BaseModel<Banner> {
+	/*
+	 * NOTE FOR DEVELOPERS:
+	 *
+	 * Never modify or reference this interface directly. All methods that expect a banner model instance should use the {@link Banner} interface instead.
+	 */
+
 	/**
 	 * Gets the primary key of this banner.
 	 *
@@ -195,6 +201,35 @@ public interface BannerModel extends BaseModel<Banner> {
 	 * @param groupId the group ID of this banner
 	 */
 	public void setGroupId(long groupId);
+
+	/**
+	 * Gets the portlet ID of this banner.
+	 *
+	 * @return the portlet ID of this banner
+	 */
+	@AutoEscape
+	public String getPortletId();
+
+	/**
+	 * Sets the portlet ID of this banner.
+	 *
+	 * @param portletId the portlet ID of this banner
+	 */
+	public void setPortletId(String portletId);
+
+	/**
+	 * Gets the pl ID of this banner.
+	 *
+	 * @return the pl ID of this banner
+	 */
+	public long getPlId();
+
+	/**
+	 * Sets the pl ID of this banner.
+	 *
+	 * @param plId the pl ID of this banner
+	 */
+	public void setPlId(long plId);
 
 	public boolean isNew();
 

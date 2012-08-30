@@ -8,5 +8,7 @@ create table Banner (
 	position INTEGER,
 	type_ INTEGER,
 	status INTEGER,
-	groupId LONG
+	groupId LONG,
+	portletId VARCHAR(75) null,
+	plId LONG
 );

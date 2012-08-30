@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2000-2010 Liferay, Inc. All rights reserved.
+ * Copyright (c) 2000-2011 Liferay, Inc. All rights reserved.
  *
  * This library is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the Free
@@ -33,6 +33,12 @@ import com.liferay.portal.kernel.util.ReferenceRegistry;
  * @generated
  */
 public class BannerLocalServiceUtil {
+	/*
+	 * NOTE FOR DEVELOPERS:
+	 *
+	 * Never modify this class directly. Add custom service methods to {@link br.com.seatecnologia.banner.service.impl.BannerLocalServiceImpl} and rerun ServiceBuilder to regenerate this class.
+	 */
+
 	/**
 	* Adds the banner to the database. Also notifies the appropriate model listeners.
 	*
@@ -250,38 +256,46 @@ public class BannerLocalServiceUtil {
 	}
 
 	public static java.util.List<br.com.seatecnologia.banner.model.Banner> getBannersByGroupId(
-		long groupId, int start, int end)
+		long groupId, java.lang.String portletId, long plId, int start, int end)
 		throws com.liferay.portal.kernel.exception.SystemException {
-		return getService().getBannersByGroupId(groupId, start, end);
+		return getService()
+				   .getBannersByGroupId(groupId, portletId, plId, start, end);
 	}
 
 	public static java.util.List<br.com.seatecnologia.banner.model.Banner> getBannersByStatusGroupId(
-		int status, long groupId, int start, int end)
+		int status, long groupId, java.lang.String portletId, long plId,
+		int start, int end)
 		throws com.liferay.portal.kernel.exception.SystemException {
 		return getService()
-				   .getBannersByStatusGroupId(status, groupId, start, end);
+				   .getBannersByStatusGroupId(status, groupId, portletId, plId,
+			start, end);
 	}
 
 	public static java.util.List<br.com.seatecnologia.banner.model.Banner> getBannersByStatus(
-		int status) throws com.liferay.portal.kernel.exception.SystemException {
-		return getService().getBannersByStatus(status);
+		int status, long groupId, java.lang.String portletId, long plId)
+		throws com.liferay.portal.kernel.exception.SystemException {
+		return getService().getBannersByStatus(status, groupId, portletId, plId);
 	}
 
 	public static br.com.seatecnologia.banner.model.Banner getBannerByPosition(
-		int position)
+		int position, long groupId, java.lang.String portletId, long plId)
 		throws br.com.seatecnologia.banner.NoSuchBannerException,
 			com.liferay.portal.kernel.exception.SystemException {
-		return getService().getBannerByPosition(position);
+		return getService()
+				   .getBannerByPosition(position, groupId, portletId, plId);
 	}
 
-	public static int getBannersByStatusCount(int status)
+	public static int getBannersByStatusCount(int status, long groupId,
+		java.lang.String portletId, long plId)
 		throws com.liferay.portal.kernel.exception.SystemException {
-		return getService().getBannersByStatusCount(status);
+		return getService()
+				   .getBannersByStatusCount(status, groupId, portletId, plId);
 	}
 
-	public static int getCoutBannersByGroupId(long groupId)
+	public static int getCoutBannersByGroupId(long groupId,
+		java.lang.String portletId, long plId)
 		throws com.liferay.portal.kernel.exception.SystemException {
-		return getService().getCoutBannersByGroupId(groupId);
+		return getService().getCoutBannersByGroupId(groupId, portletId, plId);
 	}
 
 	public static void clearService() {

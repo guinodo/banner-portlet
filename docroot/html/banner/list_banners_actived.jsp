@@ -10,9 +10,10 @@
 <%@ taglib uri="http://java.sun.com/jstl/core_rt" prefix="c"%>
 
 <%
+	
 	String redirect = PortalUtil.getCurrentURL(request);
-	long bannersCount = BannerLocalServiceUtil
-			.getBannersByStatusCount(BannerKeys.ACTIVATED);
+	long bannersCount = BannerLocalServiceUtil.getBannersByStatusCount(BannerKeys.ACTIVATED);
+	
 %>
 
 <portlet:defineObjects />

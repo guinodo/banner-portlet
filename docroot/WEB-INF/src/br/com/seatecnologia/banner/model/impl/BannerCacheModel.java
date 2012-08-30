@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2000-2010 Liferay, Inc. All rights reserved.
+ * Copyright (c) 2000-2011 Liferay, Inc. All rights reserved.
  *
  * This library is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the Free
@@ -30,7 +30,7 @@ import com.liferay.portal.model.CacheModel;
 public class BannerCacheModel implements CacheModel<Banner> {
 	@Override
 	public String toString() {
-		StringBundler sb = new StringBundler(21);
+		StringBundler sb = new StringBundler(25);
 
 		sb.append("{bannerId=");
 		sb.append(bannerId);
@@ -52,6 +52,10 @@ public class BannerCacheModel implements CacheModel<Banner> {
 		sb.append(status);
 		sb.append(", groupId=");
 		sb.append(groupId);
+		sb.append(", portletId=");
+		sb.append(portletId);
+		sb.append(", plId=");
+		sb.append(plId);
 		sb.append("}");
 
 		return sb.toString();
@@ -102,6 +106,15 @@ public class BannerCacheModel implements CacheModel<Banner> {
 		bannerImpl.setStatus(status);
 		bannerImpl.setGroupId(groupId);
 
+		if (portletId == null) {
+			bannerImpl.setPortletId(StringPool.BLANK);
+		}
+		else {
+			bannerImpl.setPortletId(portletId);
+		}
+
+		bannerImpl.setPlId(plId);
+
 		bannerImpl.resetOriginalValues();
 
 		return bannerImpl;
@@ -117,4 +130,6 @@ public class BannerCacheModel implements CacheModel<Banner> {
 	public int type;
 	public int status;
 	public long groupId;
+	public String portletId;
+	public long plId;
 }

@@ -17,5 +17,7 @@
 		<property name="type" type="com.liferay.portal.dao.orm.hibernate.IntegerType" column="type_" />
 		<property name="status" type="com.liferay.portal.dao.orm.hibernate.IntegerType" />
 		<property name="groupId" type="com.liferay.portal.dao.orm.hibernate.LongType" />
+		<property name="portletId" type="com.liferay.portal.dao.orm.hibernate.StringType" />
+		<property name="plId" type="com.liferay.portal.dao.orm.hibernate.LongType" />
 	</class>
 </hibernate-mapping>

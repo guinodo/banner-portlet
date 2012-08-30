@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2000-2010 Liferay, Inc. All rights reserved.
+ * Copyright (c) 2000-2011 Liferay, Inc. All rights reserved.
  *
  * This library is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the Free
@@ -37,6 +37,12 @@ import com.liferay.portal.service.PersistedModelLocalService;
 @Transactional(isolation = Isolation.PORTAL, rollbackFor =  {
 	PortalException.class, SystemException.class})
 public interface BannerLocalService extends PersistedModelLocalService {
+	/*
+	 * NOTE FOR DEVELOPERS:
+	 *
+	 * Never modify or reference this interface directly. Always use {@link BannerLocalServiceUtil} to access the banner local service. Add custom service methods to {@link br.com.seatecnologia.banner.service.impl.BannerLocalServiceImpl} and rerun ServiceBuilder to automatically copy the method declarations to this interface.
+	 */
+
 	/**
 	* Adds the banner to the database. Also notifies the appropriate model listeners.
 	*
@@ -223,29 +229,33 @@ public interface BannerLocalService extends PersistedModelLocalService {
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public java.util.List<br.com.seatecnologia.banner.model.Banner> getBannersByGroupId(
-		long groupId, int start, int end)
+		long groupId, java.lang.String portletId, long plId, int start, int end)
 		throws com.liferay.portal.kernel.exception.SystemException;
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public java.util.List<br.com.seatecnologia.banner.model.Banner> getBannersByStatusGroupId(
-		int status, long groupId, int start, int end)
+		int status, long groupId, java.lang.String portletId, long plId,
+		int start, int end)
 		throws com.liferay.portal.kernel.exception.SystemException;
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public java.util.List<br.com.seatecnologia.banner.model.Banner> getBannersByStatus(
-		int status) throws com.liferay.portal.kernel.exception.SystemException;
+		int status, long groupId, java.lang.String portletId, long plId)
+		throws com.liferay.portal.kernel.exception.SystemException;
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public br.com.seatecnologia.banner.model.Banner getBannerByPosition(
-		int position)
+		int position, long groupId, java.lang.String portletId, long plId)
 		throws br.com.seatecnologia.banner.NoSuchBannerException,
 			com.liferay.portal.kernel.exception.SystemException;
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public int getBannersByStatusCount(int status)
+	public int getBannersByStatusCount(int status, long groupId,
+		java.lang.String portletId, long plId)
 		throws com.liferay.portal.kernel.exception.SystemException;
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public int getCoutBannersByGroupId(long groupId)
+	public int getCoutBannersByGroupId(long groupId,
+		java.lang.String portletId, long plId)
 		throws com.liferay.portal.kernel.exception.SystemException;
 }

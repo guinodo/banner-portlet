@@ -38,27 +38,27 @@ import br.com.seatecnologia.banner.service.base.BannerLocalServiceBaseImpl;
  */
 public class BannerLocalServiceImpl extends BannerLocalServiceBaseImpl {
 	
-	public List<Banner> getBannersByGroupId(long groupId, int start, int end) throws SystemException {
-		return bannerPersistence.findByGroupId(groupId, start, end);
+	public List<Banner> getBannersByGroupId(long groupId, String portletId, long plId, int start, int end) throws SystemException {
+		return bannerPersistence.findByGroupId(groupId, portletId, plId, start, end);
 	}
 	
-	public List<Banner> getBannersByStatusGroupId(int status, long groupId, int start, int end) throws SystemException {
-		return bannerPersistence.findByStatusGroupId(status, groupId, start, end);
+	public List<Banner> getBannersByStatusGroupId(int status, long groupId,  String portletId, long plId, int start, int end) throws SystemException {
+		return bannerPersistence.findByStatusGroupId(status, groupId, portletId, plId, start, end);
 	}
 	
-	public List<Banner> getBannersByStatus(int status) throws SystemException {
-		return bannerPersistence.findByStatus(status);
+	public List<Banner> getBannersByStatus(int status, long groupId, String portletId, long plId) throws SystemException {
+		return bannerPersistence.findByStatus(status, groupId, portletId, plId);
 	}
 	
-	public Banner getBannerByPosition(int position) throws SystemException, NoSuchBannerException {
-		return bannerPersistence.findByPosition(position);
+	public Banner getBannerByPosition(int position, long groupId, String portletId, long plId) throws SystemException, NoSuchBannerException {
+		return bannerPersistence.findByPosition(position, groupId, portletId, plId);
 	}
 	
-	public int getBannersByStatusCount(int status) throws SystemException {
-		return bannerPersistence.countByStatus(status);
+	public int getBannersByStatusCount(int status, long groupId, String portletId, long plId) throws SystemException {
+		return bannerPersistence.countByStatus(status, groupId, portletId, plId);
 	}
 	
-	public int getCoutBannersByGroupId(long groupId) throws SystemException{
-		return bannerPersistence.countByGroupId(groupId);	
+	public int getCoutBannersByGroupId(long groupId, String portletId, long plId) throws SystemException{
+		return bannerPersistence.countByGroupId(groupId, portletId, plId);	
 	}
 }

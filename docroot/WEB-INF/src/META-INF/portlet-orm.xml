@@ -21,6 +21,8 @@
 			</basic>
 			<basic name="status" />
 			<basic name="groupId" />
+			<basic name="portletId" />
+			<basic name="plId" />
 			<transient name="primaryKey" />
 			<transient name="primaryKeyObj" />
 		</attributes>

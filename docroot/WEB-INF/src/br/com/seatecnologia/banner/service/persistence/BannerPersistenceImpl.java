@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2000-2010 Liferay, Inc. All rights reserved.
+ * Copyright (c) 2000-2011 Liferay, Inc. All rights reserved.
  *
  * This library is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the Free
@@ -40,6 +40,7 @@ import com.liferay.portal.kernel.util.PropsUtil;
 import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
+import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.model.CacheModel;
 import com.liferay.portal.model.ModelListener;
 import com.liferay.portal.service.persistence.BatchSessionUtil;
@@ -67,6 +68,11 @@ import java.util.List;
  */
 public class BannerPersistenceImpl extends BasePersistenceImpl<Banner>
 	implements BannerPersistence {
+	/*
+	 * NOTE FOR DEVELOPERS:
+	 *
+	 * Never modify or reference this class directly. Always use {@link BannerUtil} to access the banner persistence. Modify <code>service.xml</code> and rerun ServiceBuilder to regenerate this class.
+	 */
 	public static final String FINDER_CLASS_NAME_ENTITY = BannerImpl.class.getName();
 	public static final String FINDER_CLASS_NAME_LIST = FINDER_CLASS_NAME_ENTITY +
 		".List";
@@ -74,6 +80,7 @@ public class BannerPersistenceImpl extends BasePersistenceImpl<Banner>
 			BannerModelImpl.FINDER_CACHE_ENABLED, BannerImpl.class,
 			FINDER_CLASS_NAME_LIST, "findByGroupId",
 			new String[] {
+				Long.class.getName(), String.class.getName(),
 				Long.class.getName(),
 				
 			"java.lang.Integer", "java.lang.Integer",
@@ -82,12 +89,16 @@ public class BannerPersistenceImpl extends BasePersistenceImpl<Banner>
 	public static final FinderPath FINDER_PATH_COUNT_BY_GROUPID = new FinderPath(BannerModelImpl.ENTITY_CACHE_ENABLED,
 			BannerModelImpl.FINDER_CACHE_ENABLED, Long.class,
 			FINDER_CLASS_NAME_LIST, "countByGroupId",
-			new String[] { Long.class.getName() });
+			new String[] {
+				Long.class.getName(), String.class.getName(),
+				Long.class.getName()
+			});
 	public static final FinderPath FINDER_PATH_FIND_BY_STATUSGROUPID = new FinderPath(BannerModelImpl.ENTITY_CACHE_ENABLED,
 			BannerModelImpl.FINDER_CACHE_ENABLED, BannerImpl.class,
 			FINDER_CLASS_NAME_LIST, "findByStatusGroupId",
 			new String[] {
 				Integer.class.getName(), Long.class.getName(),
+				String.class.getName(), Long.class.getName(),
 				
 			"java.lang.Integer", "java.lang.Integer",
 				"com.liferay.portal.kernel.util.OrderByComparator"
@@ -95,7 +106,10 @@ public class BannerPersistenceImpl extends BasePersistenceImpl<Banner>
 	public static final FinderPath FINDER_PATH_COUNT_BY_STATUSGROUPID = new FinderPath(BannerModelImpl.ENTITY_CACHE_ENABLED,
 			BannerModelImpl.FINDER_CACHE_ENABLED, Long.class,
 			FINDER_CLASS_NAME_LIST, "countByStatusGroupId",
-			new String[] { Integer.class.getName(), Long.class.getName() });
+			new String[] {
+				Integer.class.getName(), Long.class.getName(),
+				String.class.getName(), Long.class.getName()
+			});
 	public static final FinderPath FINDER_PATH_FETCH_BY_BANNERID = new FinderPath(BannerModelImpl.ENTITY_CACHE_ENABLED,
 			BannerModelImpl.FINDER_CACHE_ENABLED, BannerImpl.class,
 			FINDER_CLASS_NAME_ENTITY, "fetchByBannerId",
@@ -108,7 +122,8 @@ public class BannerPersistenceImpl extends BasePersistenceImpl<Banner>
 			BannerModelImpl.FINDER_CACHE_ENABLED, BannerImpl.class,
 			FINDER_CLASS_NAME_LIST, "findByStatus",
 			new String[] {
-				Integer.class.getName(),
+				Integer.class.getName(), Long.class.getName(),
+				String.class.getName(), Long.class.getName(),
 				
 			"java.lang.Integer", "java.lang.Integer",
 				"com.liferay.portal.kernel.util.OrderByComparator"
@@ -116,15 +131,24 @@ public class BannerPersistenceImpl extends BasePersistenceImpl<Banner>
 	public static final FinderPath FINDER_PATH_COUNT_BY_STATUS = new FinderPath(BannerModelImpl.ENTITY_CACHE_ENABLED,
 			BannerModelImpl.FINDER_CACHE_ENABLED, Long.class,
 			FINDER_CLASS_NAME_LIST, "countByStatus",
-			new String[] { Integer.class.getName() });
+			new String[] {
+				Integer.class.getName(), Long.class.getName(),
+				String.class.getName(), Long.class.getName()
+			});
 	public static final FinderPath FINDER_PATH_FETCH_BY_POSITION = new FinderPath(BannerModelImpl.ENTITY_CACHE_ENABLED,
 			BannerModelImpl.FINDER_CACHE_ENABLED, BannerImpl.class,
 			FINDER_CLASS_NAME_ENTITY, "fetchByPosition",
-			new String[] { Integer.class.getName() });
+			new String[] {
+				Integer.class.getName(), Long.class.getName(),
+				String.class.getName(), Long.class.getName()
+			});
 	public static final FinderPath FINDER_PATH_COUNT_BY_POSITION = new FinderPath(BannerModelImpl.ENTITY_CACHE_ENABLED,
 			BannerModelImpl.FINDER_CACHE_ENABLED, Long.class,
 			FINDER_CLASS_NAME_LIST, "countByPosition",
-			new String[] { Integer.class.getName() });
+			new String[] {
+				Integer.class.getName(), Long.class.getName(),
+				String.class.getName(), Long.class.getName()
+			});
 	public static final FinderPath FINDER_PATH_FIND_ALL = new FinderPath(BannerModelImpl.ENTITY_CACHE_ENABLED,
 			BannerModelImpl.FINDER_CACHE_ENABLED, BannerImpl.class,
 			FINDER_CLASS_NAME_LIST, "findAll", new String[0]);
@@ -145,7 +169,12 @@ public class BannerPersistenceImpl extends BasePersistenceImpl<Banner>
 			new Object[] { Long.valueOf(banner.getBannerId()) }, banner);
 
 		FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_POSITION,
-			new Object[] { Integer.valueOf(banner.getPosition()) }, banner);
+			new Object[] {
+				Integer.valueOf(banner.getPosition()),
+				Long.valueOf(banner.getGroupId()),
+				
+			banner.getPortletId(), Long.valueOf(banner.getPlId())
+			}, banner);
 
 		banner.resetOriginalValues();
 	}
@@ -199,7 +228,12 @@ public class BannerPersistenceImpl extends BasePersistenceImpl<Banner>
 			new Object[] { Long.valueOf(banner.getBannerId()) });
 
 		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_POSITION,
-			new Object[] { Integer.valueOf(banner.getPosition()) });
+			new Object[] {
+				Integer.valueOf(banner.getPosition()),
+				Long.valueOf(banner.getGroupId()),
+				
+			banner.getPortletId(), Long.valueOf(banner.getPlId())
+			});
 	}
 
 	/**
@@ -309,7 +343,13 @@ public class BannerPersistenceImpl extends BasePersistenceImpl<Banner>
 			new Object[] { Long.valueOf(bannerModelImpl.getBannerId()) });
 
 		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_POSITION,
-			new Object[] { Integer.valueOf(bannerModelImpl.getPosition()) });
+			new Object[] {
+				Integer.valueOf(bannerModelImpl.getPosition()),
+				Long.valueOf(bannerModelImpl.getGroupId()),
+				
+			bannerModelImpl.getPortletId(),
+				Long.valueOf(bannerModelImpl.getPlId())
+			});
 
 		EntityCacheUtil.removeResult(BannerModelImpl.ENTITY_CACHE_ENABLED,
 			BannerImpl.class, banner.getPrimaryKey());
@@ -361,17 +401,34 @@ public class BannerPersistenceImpl extends BasePersistenceImpl<Banner>
 		}
 
 		if (!isNew &&
-				(banner.getPosition() != bannerModelImpl.getOriginalPosition())) {
+				((banner.getPosition() != bannerModelImpl.getOriginalPosition()) ||
+				(banner.getGroupId() != bannerModelImpl.getOriginalGroupId()) ||
+				!Validator.equals(banner.getPortletId(),
+					bannerModelImpl.getOriginalPortletId()) ||
+				(banner.getPlId() != bannerModelImpl.getOriginalPlId()))) {
 			FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_POSITION,
 				new Object[] {
-					Integer.valueOf(bannerModelImpl.getOriginalPosition())
+					Integer.valueOf(bannerModelImpl.getOriginalPosition()),
+					Long.valueOf(bannerModelImpl.getOriginalGroupId()),
+					
+				bannerModelImpl.getOriginalPortletId(),
+					Long.valueOf(bannerModelImpl.getOriginalPlId())
 				});
 		}
 
 		if (isNew ||
-				(banner.getPosition() != bannerModelImpl.getOriginalPosition())) {
+				((banner.getPosition() != bannerModelImpl.getOriginalPosition()) ||
+				(banner.getGroupId() != bannerModelImpl.getOriginalGroupId()) ||
+				!Validator.equals(banner.getPortletId(),
+					bannerModelImpl.getOriginalPortletId()) ||
+				(banner.getPlId() != bannerModelImpl.getOriginalPlId()))) {
 			FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_POSITION,
-				new Object[] { Integer.valueOf(banner.getPosition()) }, banner);
+				new Object[] {
+					Integer.valueOf(banner.getPosition()),
+					Long.valueOf(banner.getGroupId()),
+					
+				banner.getPortletId(), Long.valueOf(banner.getPlId())
+				}, banner);
 		}
 
 		return banner;
@@ -397,6 +454,8 @@ public class BannerPersistenceImpl extends BasePersistenceImpl<Banner>
 		bannerImpl.setType(banner.getType());
 		bannerImpl.setStatus(banner.getStatus());
 		bannerImpl.setGroupId(banner.getGroupId());
+		bannerImpl.setPortletId(banner.getPortletId());
+		bannerImpl.setPlId(banner.getPlId());
 
 		return bannerImpl;
 	}
@@ -500,52 +559,61 @@ public class BannerPersistenceImpl extends BasePersistenceImpl<Banner>
 	}
 
 	/**
-	 * Finds all the banners where groupId = &#63;.
+	 * Finds all the banners where groupId = &#63; and portletId = &#63; and plId = &#63;.
 	 *
 	 * @param groupId the group ID to search with
+	 * @param portletId the portlet ID to search with
+	 * @param plId the pl ID to search with
 	 * @return the matching banners
 	 * @throws SystemException if a system exception occurred
 	 */
-	public List<Banner> findByGroupId(long groupId) throws SystemException {
-		return findByGroupId(groupId, QueryUtil.ALL_POS, QueryUtil.ALL_POS, null);
+	public List<Banner> findByGroupId(long groupId, String portletId, long plId)
+		throws SystemException {
+		return findByGroupId(groupId, portletId, plId, QueryUtil.ALL_POS,
+			QueryUtil.ALL_POS, null);
 	}
 
 	/**
-	 * Finds a range of all the banners where groupId = &#63;.
+	 * Finds a range of all the banners where groupId = &#63; and portletId = &#63; and plId = &#63;.
 	 *
 	 * <p>
 	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link com.liferay.portal.kernel.dao.orm.QueryUtil#ALL_POS} will return the full result set.
 	 * </p>
 	 *
 	 * @param groupId the group ID to search with
+	 * @param portletId the portlet ID to search with
+	 * @param plId the pl ID to search with
 	 * @param start the lower bound of the range of banners to return
 	 * @param end the upper bound of the range of banners to return (not inclusive)
 	 * @return the range of matching banners
 	 * @throws SystemException if a system exception occurred
 	 */
-	public List<Banner> findByGroupId(long groupId, int start, int end)
-		throws SystemException {
-		return findByGroupId(groupId, start, end, null);
+	public List<Banner> findByGroupId(long groupId, String portletId,
+		long plId, int start, int end) throws SystemException {
+		return findByGroupId(groupId, portletId, plId, start, end, null);
 	}
 
 	/**
-	 * Finds an ordered range of all the banners where groupId = &#63;.
+	 * Finds an ordered range of all the banners where groupId = &#63; and portletId = &#63; and plId = &#63;.
 	 *
 	 * <p>
 	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link com.liferay.portal.kernel.dao.orm.QueryUtil#ALL_POS} will return the full result set.
 	 * </p>
 	 *
 	 * @param groupId the group ID to search with
+	 * @param portletId the portlet ID to search with
+	 * @param plId the pl ID to search with
 	 * @param start the lower bound of the range of banners to return
 	 * @param end the upper bound of the range of banners to return (not inclusive)
 	 * @param orderByComparator the comparator to order the results by
 	 * @return the ordered range of matching banners
 	 * @throws SystemException if a system exception occurred
 	 */
-	public List<Banner> findByGroupId(long groupId, int start, int end,
-		OrderByComparator orderByComparator) throws SystemException {
+	public List<Banner> findByGroupId(long groupId, String portletId,
+		long plId, int start, int end, OrderByComparator orderByComparator)
+		throws SystemException {
 		Object[] finderArgs = new Object[] {
-				groupId,
+				groupId, portletId, plId,
 				
 				String.valueOf(start), String.valueOf(end),
 				String.valueOf(orderByComparator)
@@ -558,16 +626,30 @@ public class BannerPersistenceImpl extends BasePersistenceImpl<Banner>
 			StringBundler query = null;
 
 			if (orderByComparator != null) {
-				query = new StringBundler(3 +
+				query = new StringBundler(5 +
 						(orderByComparator.getOrderByFields().length * 3));
 			}
 			else {
-				query = new StringBundler(3);
+				query = new StringBundler(5);
 			}
 
 			query.append(_SQL_SELECT_BANNER_WHERE);
 
 			query.append(_FINDER_COLUMN_GROUPID_GROUPID_2);
+
+			if (portletId == null) {
+				query.append(_FINDER_COLUMN_GROUPID_PORTLETID_1);
+			}
+			else {
+				if (portletId.equals(StringPool.BLANK)) {
+					query.append(_FINDER_COLUMN_GROUPID_PORTLETID_3);
+				}
+				else {
+					query.append(_FINDER_COLUMN_GROUPID_PORTLETID_2);
+				}
+			}
+
+			query.append(_FINDER_COLUMN_GROUPID_PLID_2);
 
 			if (orderByComparator != null) {
 				appendOrderByComparator(query, _ORDER_BY_ENTITY_ALIAS,
@@ -590,6 +672,12 @@ public class BannerPersistenceImpl extends BasePersistenceImpl<Banner>
 				QueryPos qPos = QueryPos.getInstance(q);
 
 				qPos.add(groupId);
+
+				if (portletId != null) {
+					qPos.add(portletId);
+				}
+
+				qPos.add(plId);
 
 				list = (List<Banner>)QueryUtil.list(q, getDialect(), start, end);
 			}
@@ -616,30 +704,39 @@ public class BannerPersistenceImpl extends BasePersistenceImpl<Banner>
 	}
 
 	/**
-	 * Finds the first banner in the ordered set where groupId = &#63;.
+	 * Finds the first banner in the ordered set where groupId = &#63; and portletId = &#63; and plId = &#63;.
 	 *
 	 * <p>
 	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link com.liferay.portal.kernel.dao.orm.QueryUtil#ALL_POS} will return the full result set.
 	 * </p>
 	 *
 	 * @param groupId the group ID to search with
+	 * @param portletId the portlet ID to search with
+	 * @param plId the pl ID to search with
 	 * @param orderByComparator the comparator to order the set by
 	 * @return the first matching banner
 	 * @throws br.com.seatecnologia.banner.NoSuchBannerException if a matching banner could not be found
 	 * @throws SystemException if a system exception occurred
 	 */
-	public Banner findByGroupId_First(long groupId,
-		OrderByComparator orderByComparator)
+	public Banner findByGroupId_First(long groupId, String portletId,
+		long plId, OrderByComparator orderByComparator)
 		throws NoSuchBannerException, SystemException {
-		List<Banner> list = findByGroupId(groupId, 0, 1, orderByComparator);
+		List<Banner> list = findByGroupId(groupId, portletId, plId, 0, 1,
+				orderByComparator);
 
 		if (list.isEmpty()) {
-			StringBundler msg = new StringBundler(4);
+			StringBundler msg = new StringBundler(8);
 
 			msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
 			msg.append("groupId=");
 			msg.append(groupId);
+
+			msg.append(", portletId=");
+			msg.append(portletId);
+
+			msg.append(", plId=");
+			msg.append(plId);
 
 			msg.append(StringPool.CLOSE_CURLY_BRACE);
 
@@ -651,33 +748,41 @@ public class BannerPersistenceImpl extends BasePersistenceImpl<Banner>
 	}
 
 	/**
-	 * Finds the last banner in the ordered set where groupId = &#63;.
+	 * Finds the last banner in the ordered set where groupId = &#63; and portletId = &#63; and plId = &#63;.
 	 *
 	 * <p>
 	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link com.liferay.portal.kernel.dao.orm.QueryUtil#ALL_POS} will return the full result set.
 	 * </p>
 	 *
 	 * @param groupId the group ID to search with
+	 * @param portletId the portlet ID to search with
+	 * @param plId the pl ID to search with
 	 * @param orderByComparator the comparator to order the set by
 	 * @return the last matching banner
 	 * @throws br.com.seatecnologia.banner.NoSuchBannerException if a matching banner could not be found
 	 * @throws SystemException if a system exception occurred
 	 */
-	public Banner findByGroupId_Last(long groupId,
+	public Banner findByGroupId_Last(long groupId, String portletId, long plId,
 		OrderByComparator orderByComparator)
 		throws NoSuchBannerException, SystemException {
-		int count = countByGroupId(groupId);
+		int count = countByGroupId(groupId, portletId, plId);
 
-		List<Banner> list = findByGroupId(groupId, count - 1, count,
-				orderByComparator);
+		List<Banner> list = findByGroupId(groupId, portletId, plId, count - 1,
+				count, orderByComparator);
 
 		if (list.isEmpty()) {
-			StringBundler msg = new StringBundler(4);
+			StringBundler msg = new StringBundler(8);
 
 			msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
 			msg.append("groupId=");
 			msg.append(groupId);
+
+			msg.append(", portletId=");
+			msg.append(portletId);
+
+			msg.append(", plId=");
+			msg.append(plId);
 
 			msg.append(StringPool.CLOSE_CURLY_BRACE);
 
@@ -689,7 +794,7 @@ public class BannerPersistenceImpl extends BasePersistenceImpl<Banner>
 	}
 
 	/**
-	 * Finds the banners before and after the current banner in the ordered set where groupId = &#63;.
+	 * Finds the banners before and after the current banner in the ordered set where groupId = &#63; and portletId = &#63; and plId = &#63;.
 	 *
 	 * <p>
 	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link com.liferay.portal.kernel.dao.orm.QueryUtil#ALL_POS} will return the full result set.
@@ -697,13 +802,15 @@ public class BannerPersistenceImpl extends BasePersistenceImpl<Banner>
 	 *
 	 * @param bannerId the primary key of the current banner
 	 * @param groupId the group ID to search with
+	 * @param portletId the portlet ID to search with
+	 * @param plId the pl ID to search with
 	 * @param orderByComparator the comparator to order the set by
 	 * @return the previous, current, and next banner
 	 * @throws br.com.seatecnologia.banner.NoSuchBannerException if a banner with the primary key could not be found
 	 * @throws SystemException if a system exception occurred
 	 */
 	public Banner[] findByGroupId_PrevAndNext(long bannerId, long groupId,
-		OrderByComparator orderByComparator)
+		String portletId, long plId, OrderByComparator orderByComparator)
 		throws NoSuchBannerException, SystemException {
 		Banner banner = findByPrimaryKey(bannerId);
 
@@ -715,12 +822,12 @@ public class BannerPersistenceImpl extends BasePersistenceImpl<Banner>
 			Banner[] array = new BannerImpl[3];
 
 			array[0] = getByGroupId_PrevAndNext(session, banner, groupId,
-					orderByComparator, true);
+					portletId, plId, orderByComparator, true);
 
 			array[1] = banner;
 
 			array[2] = getByGroupId_PrevAndNext(session, banner, groupId,
-					orderByComparator, false);
+					portletId, plId, orderByComparator, false);
 
 			return array;
 		}
@@ -733,7 +840,8 @@ public class BannerPersistenceImpl extends BasePersistenceImpl<Banner>
 	}
 
 	protected Banner getByGroupId_PrevAndNext(Session session, Banner banner,
-		long groupId, OrderByComparator orderByComparator, boolean previous) {
+		long groupId, String portletId, long plId,
+		OrderByComparator orderByComparator, boolean previous) {
 		StringBundler query = null;
 
 		if (orderByComparator != null) {
@@ -747,6 +855,20 @@ public class BannerPersistenceImpl extends BasePersistenceImpl<Banner>
 		query.append(_SQL_SELECT_BANNER_WHERE);
 
 		query.append(_FINDER_COLUMN_GROUPID_GROUPID_2);
+
+		if (portletId == null) {
+			query.append(_FINDER_COLUMN_GROUPID_PORTLETID_1);
+		}
+		else {
+			if (portletId.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_GROUPID_PORTLETID_3);
+			}
+			else {
+				query.append(_FINDER_COLUMN_GROUPID_PORTLETID_2);
+			}
+		}
+
+		query.append(_FINDER_COLUMN_GROUPID_PLID_2);
 
 		if (orderByComparator != null) {
 			String[] orderByFields = orderByComparator.getOrderByFields();
@@ -817,6 +939,12 @@ public class BannerPersistenceImpl extends BasePersistenceImpl<Banner>
 
 		qPos.add(groupId);
 
+		if (portletId != null) {
+			qPos.add(portletId);
+		}
+
+		qPos.add(plId);
+
 		if (orderByComparator != null) {
 			Object[] values = orderByComparator.getOrderByValues(banner);
 
@@ -836,21 +964,23 @@ public class BannerPersistenceImpl extends BasePersistenceImpl<Banner>
 	}
 
 	/**
-	 * Finds all the banners where status = &#63; and groupId = &#63;.
+	 * Finds all the banners where status = &#63; and groupId = &#63; and portletId = &#63; and plId = &#63;.
 	 *
 	 * @param status the status to search with
 	 * @param groupId the group ID to search with
+	 * @param portletId the portlet ID to search with
+	 * @param plId the pl ID to search with
 	 * @return the matching banners
 	 * @throws SystemException if a system exception occurred
 	 */
-	public List<Banner> findByStatusGroupId(int status, long groupId)
-		throws SystemException {
-		return findByStatusGroupId(status, groupId, QueryUtil.ALL_POS,
-			QueryUtil.ALL_POS, null);
+	public List<Banner> findByStatusGroupId(int status, long groupId,
+		String portletId, long plId) throws SystemException {
+		return findByStatusGroupId(status, groupId, portletId, plId,
+			QueryUtil.ALL_POS, QueryUtil.ALL_POS, null);
 	}
 
 	/**
-	 * Finds a range of all the banners where status = &#63; and groupId = &#63;.
+	 * Finds a range of all the banners where status = &#63; and groupId = &#63; and portletId = &#63; and plId = &#63;.
 	 *
 	 * <p>
 	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link com.liferay.portal.kernel.dao.orm.QueryUtil#ALL_POS} will return the full result set.
@@ -858,18 +988,22 @@ public class BannerPersistenceImpl extends BasePersistenceImpl<Banner>
 	 *
 	 * @param status the status to search with
 	 * @param groupId the group ID to search with
+	 * @param portletId the portlet ID to search with
+	 * @param plId the pl ID to search with
 	 * @param start the lower bound of the range of banners to return
 	 * @param end the upper bound of the range of banners to return (not inclusive)
 	 * @return the range of matching banners
 	 * @throws SystemException if a system exception occurred
 	 */
 	public List<Banner> findByStatusGroupId(int status, long groupId,
-		int start, int end) throws SystemException {
-		return findByStatusGroupId(status, groupId, start, end, null);
+		String portletId, long plId, int start, int end)
+		throws SystemException {
+		return findByStatusGroupId(status, groupId, portletId, plId, start,
+			end, null);
 	}
 
 	/**
-	 * Finds an ordered range of all the banners where status = &#63; and groupId = &#63;.
+	 * Finds an ordered range of all the banners where status = &#63; and groupId = &#63; and portletId = &#63; and plId = &#63;.
 	 *
 	 * <p>
 	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link com.liferay.portal.kernel.dao.orm.QueryUtil#ALL_POS} will return the full result set.
@@ -877,6 +1011,8 @@ public class BannerPersistenceImpl extends BasePersistenceImpl<Banner>
 	 *
 	 * @param status the status to search with
 	 * @param groupId the group ID to search with
+	 * @param portletId the portlet ID to search with
+	 * @param plId the pl ID to search with
 	 * @param start the lower bound of the range of banners to return
 	 * @param end the upper bound of the range of banners to return (not inclusive)
 	 * @param orderByComparator the comparator to order the results by
@@ -884,10 +1020,10 @@ public class BannerPersistenceImpl extends BasePersistenceImpl<Banner>
 	 * @throws SystemException if a system exception occurred
 	 */
 	public List<Banner> findByStatusGroupId(int status, long groupId,
-		int start, int end, OrderByComparator orderByComparator)
-		throws SystemException {
+		String portletId, long plId, int start, int end,
+		OrderByComparator orderByComparator) throws SystemException {
 		Object[] finderArgs = new Object[] {
-				status, groupId,
+				status, groupId, portletId, plId,
 				
 				String.valueOf(start), String.valueOf(end),
 				String.valueOf(orderByComparator)
@@ -900,11 +1036,11 @@ public class BannerPersistenceImpl extends BasePersistenceImpl<Banner>
 			StringBundler query = null;
 
 			if (orderByComparator != null) {
-				query = new StringBundler(4 +
+				query = new StringBundler(6 +
 						(orderByComparator.getOrderByFields().length * 3));
 			}
 			else {
-				query = new StringBundler(4);
+				query = new StringBundler(6);
 			}
 
 			query.append(_SQL_SELECT_BANNER_WHERE);
@@ -912,6 +1048,20 @@ public class BannerPersistenceImpl extends BasePersistenceImpl<Banner>
 			query.append(_FINDER_COLUMN_STATUSGROUPID_STATUS_2);
 
 			query.append(_FINDER_COLUMN_STATUSGROUPID_GROUPID_2);
+
+			if (portletId == null) {
+				query.append(_FINDER_COLUMN_STATUSGROUPID_PORTLETID_1);
+			}
+			else {
+				if (portletId.equals(StringPool.BLANK)) {
+					query.append(_FINDER_COLUMN_STATUSGROUPID_PORTLETID_3);
+				}
+				else {
+					query.append(_FINDER_COLUMN_STATUSGROUPID_PORTLETID_2);
+				}
+			}
+
+			query.append(_FINDER_COLUMN_STATUSGROUPID_PLID_2);
 
 			if (orderByComparator != null) {
 				appendOrderByComparator(query, _ORDER_BY_ENTITY_ALIAS,
@@ -936,6 +1086,12 @@ public class BannerPersistenceImpl extends BasePersistenceImpl<Banner>
 				qPos.add(status);
 
 				qPos.add(groupId);
+
+				if (portletId != null) {
+					qPos.add(portletId);
+				}
+
+				qPos.add(plId);
 
 				list = (List<Banner>)QueryUtil.list(q, getDialect(), start, end);
 			}
@@ -962,7 +1118,7 @@ public class BannerPersistenceImpl extends BasePersistenceImpl<Banner>
 	}
 
 	/**
-	 * Finds the first banner in the ordered set where status = &#63; and groupId = &#63;.
+	 * Finds the first banner in the ordered set where status = &#63; and groupId = &#63; and portletId = &#63; and plId = &#63;.
 	 *
 	 * <p>
 	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link com.liferay.portal.kernel.dao.orm.QueryUtil#ALL_POS} will return the full result set.
@@ -970,19 +1126,21 @@ public class BannerPersistenceImpl extends BasePersistenceImpl<Banner>
 	 *
 	 * @param status the status to search with
 	 * @param groupId the group ID to search with
+	 * @param portletId the portlet ID to search with
+	 * @param plId the pl ID to search with
 	 * @param orderByComparator the comparator to order the set by
 	 * @return the first matching banner
 	 * @throws br.com.seatecnologia.banner.NoSuchBannerException if a matching banner could not be found
 	 * @throws SystemException if a system exception occurred
 	 */
 	public Banner findByStatusGroupId_First(int status, long groupId,
-		OrderByComparator orderByComparator)
+		String portletId, long plId, OrderByComparator orderByComparator)
 		throws NoSuchBannerException, SystemException {
-		List<Banner> list = findByStatusGroupId(status, groupId, 0, 1,
-				orderByComparator);
+		List<Banner> list = findByStatusGroupId(status, groupId, portletId,
+				plId, 0, 1, orderByComparator);
 
 		if (list.isEmpty()) {
-			StringBundler msg = new StringBundler(6);
+			StringBundler msg = new StringBundler(10);
 
 			msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
@@ -991,6 +1149,12 @@ public class BannerPersistenceImpl extends BasePersistenceImpl<Banner>
 
 			msg.append(", groupId=");
 			msg.append(groupId);
+
+			msg.append(", portletId=");
+			msg.append(portletId);
+
+			msg.append(", plId=");
+			msg.append(plId);
 
 			msg.append(StringPool.CLOSE_CURLY_BRACE);
 
@@ -1002,7 +1166,7 @@ public class BannerPersistenceImpl extends BasePersistenceImpl<Banner>
 	}
 
 	/**
-	 * Finds the last banner in the ordered set where status = &#63; and groupId = &#63;.
+	 * Finds the last banner in the ordered set where status = &#63; and groupId = &#63; and portletId = &#63; and plId = &#63;.
 	 *
 	 * <p>
 	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link com.liferay.portal.kernel.dao.orm.QueryUtil#ALL_POS} will return the full result set.
@@ -1010,21 +1174,23 @@ public class BannerPersistenceImpl extends BasePersistenceImpl<Banner>
 	 *
 	 * @param status the status to search with
 	 * @param groupId the group ID to search with
+	 * @param portletId the portlet ID to search with
+	 * @param plId the pl ID to search with
 	 * @param orderByComparator the comparator to order the set by
 	 * @return the last matching banner
 	 * @throws br.com.seatecnologia.banner.NoSuchBannerException if a matching banner could not be found
 	 * @throws SystemException if a system exception occurred
 	 */
 	public Banner findByStatusGroupId_Last(int status, long groupId,
-		OrderByComparator orderByComparator)
+		String portletId, long plId, OrderByComparator orderByComparator)
 		throws NoSuchBannerException, SystemException {
-		int count = countByStatusGroupId(status, groupId);
+		int count = countByStatusGroupId(status, groupId, portletId, plId);
 
-		List<Banner> list = findByStatusGroupId(status, groupId, count - 1,
-				count, orderByComparator);
+		List<Banner> list = findByStatusGroupId(status, groupId, portletId,
+				plId, count - 1, count, orderByComparator);
 
 		if (list.isEmpty()) {
-			StringBundler msg = new StringBundler(6);
+			StringBundler msg = new StringBundler(10);
 
 			msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
@@ -1033,6 +1199,12 @@ public class BannerPersistenceImpl extends BasePersistenceImpl<Banner>
 
 			msg.append(", groupId=");
 			msg.append(groupId);
+
+			msg.append(", portletId=");
+			msg.append(portletId);
+
+			msg.append(", plId=");
+			msg.append(plId);
 
 			msg.append(StringPool.CLOSE_CURLY_BRACE);
 
@@ -1044,7 +1216,7 @@ public class BannerPersistenceImpl extends BasePersistenceImpl<Banner>
 	}
 
 	/**
-	 * Finds the banners before and after the current banner in the ordered set where status = &#63; and groupId = &#63;.
+	 * Finds the banners before and after the current banner in the ordered set where status = &#63; and groupId = &#63; and portletId = &#63; and plId = &#63;.
 	 *
 	 * <p>
 	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link com.liferay.portal.kernel.dao.orm.QueryUtil#ALL_POS} will return the full result set.
@@ -1053,13 +1225,16 @@ public class BannerPersistenceImpl extends BasePersistenceImpl<Banner>
 	 * @param bannerId the primary key of the current banner
 	 * @param status the status to search with
 	 * @param groupId the group ID to search with
+	 * @param portletId the portlet ID to search with
+	 * @param plId the pl ID to search with
 	 * @param orderByComparator the comparator to order the set by
 	 * @return the previous, current, and next banner
 	 * @throws br.com.seatecnologia.banner.NoSuchBannerException if a banner with the primary key could not be found
 	 * @throws SystemException if a system exception occurred
 	 */
 	public Banner[] findByStatusGroupId_PrevAndNext(long bannerId, int status,
-		long groupId, OrderByComparator orderByComparator)
+		long groupId, String portletId, long plId,
+		OrderByComparator orderByComparator)
 		throws NoSuchBannerException, SystemException {
 		Banner banner = findByPrimaryKey(bannerId);
 
@@ -1071,12 +1246,12 @@ public class BannerPersistenceImpl extends BasePersistenceImpl<Banner>
 			Banner[] array = new BannerImpl[3];
 
 			array[0] = getByStatusGroupId_PrevAndNext(session, banner, status,
-					groupId, orderByComparator, true);
+					groupId, portletId, plId, orderByComparator, true);
 
 			array[1] = banner;
 
 			array[2] = getByStatusGroupId_PrevAndNext(session, banner, status,
-					groupId, orderByComparator, false);
+					groupId, portletId, plId, orderByComparator, false);
 
 			return array;
 		}
@@ -1089,7 +1264,7 @@ public class BannerPersistenceImpl extends BasePersistenceImpl<Banner>
 	}
 
 	protected Banner getByStatusGroupId_PrevAndNext(Session session,
-		Banner banner, int status, long groupId,
+		Banner banner, int status, long groupId, String portletId, long plId,
 		OrderByComparator orderByComparator, boolean previous) {
 		StringBundler query = null;
 
@@ -1106,6 +1281,20 @@ public class BannerPersistenceImpl extends BasePersistenceImpl<Banner>
 		query.append(_FINDER_COLUMN_STATUSGROUPID_STATUS_2);
 
 		query.append(_FINDER_COLUMN_STATUSGROUPID_GROUPID_2);
+
+		if (portletId == null) {
+			query.append(_FINDER_COLUMN_STATUSGROUPID_PORTLETID_1);
+		}
+		else {
+			if (portletId.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_STATUSGROUPID_PORTLETID_3);
+			}
+			else {
+				query.append(_FINDER_COLUMN_STATUSGROUPID_PORTLETID_2);
+			}
+		}
+
+		query.append(_FINDER_COLUMN_STATUSGROUPID_PLID_2);
 
 		if (orderByComparator != null) {
 			String[] orderByFields = orderByComparator.getOrderByFields();
@@ -1177,6 +1366,12 @@ public class BannerPersistenceImpl extends BasePersistenceImpl<Banner>
 		qPos.add(status);
 
 		qPos.add(groupId);
+
+		if (portletId != null) {
+			qPos.add(portletId);
+		}
+
+		qPos.add(plId);
 
 		if (orderByComparator != null) {
 			Object[] values = orderByComparator.getOrderByValues(banner);
@@ -1325,52 +1520,65 @@ public class BannerPersistenceImpl extends BasePersistenceImpl<Banner>
 	}
 
 	/**
-	 * Finds all the banners where status = &#63;.
+	 * Finds all the banners where status = &#63; and groupId = &#63; and portletId = &#63; and plId = &#63;.
 	 *
 	 * @param status the status to search with
+	 * @param groupId the group ID to search with
+	 * @param portletId the portlet ID to search with
+	 * @param plId the pl ID to search with
 	 * @return the matching banners
 	 * @throws SystemException if a system exception occurred
 	 */
-	public List<Banner> findByStatus(int status) throws SystemException {
-		return findByStatus(status, QueryUtil.ALL_POS, QueryUtil.ALL_POS, null);
+	public List<Banner> findByStatus(int status, long groupId,
+		String portletId, long plId) throws SystemException {
+		return findByStatus(status, groupId, portletId, plId,
+			QueryUtil.ALL_POS, QueryUtil.ALL_POS, null);
 	}
 
 	/**
-	 * Finds a range of all the banners where status = &#63;.
+	 * Finds a range of all the banners where status = &#63; and groupId = &#63; and portletId = &#63; and plId = &#63;.
 	 *
 	 * <p>
 	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link com.liferay.portal.kernel.dao.orm.QueryUtil#ALL_POS} will return the full result set.
 	 * </p>
 	 *
 	 * @param status the status to search with
+	 * @param groupId the group ID to search with
+	 * @param portletId the portlet ID to search with
+	 * @param plId the pl ID to search with
 	 * @param start the lower bound of the range of banners to return
 	 * @param end the upper bound of the range of banners to return (not inclusive)
 	 * @return the range of matching banners
 	 * @throws SystemException if a system exception occurred
 	 */
-	public List<Banner> findByStatus(int status, int start, int end)
+	public List<Banner> findByStatus(int status, long groupId,
+		String portletId, long plId, int start, int end)
 		throws SystemException {
-		return findByStatus(status, start, end, null);
+		return findByStatus(status, groupId, portletId, plId, start, end, null);
 	}
 
 	/**
-	 * Finds an ordered range of all the banners where status = &#63;.
+	 * Finds an ordered range of all the banners where status = &#63; and groupId = &#63; and portletId = &#63; and plId = &#63;.
 	 *
 	 * <p>
 	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link com.liferay.portal.kernel.dao.orm.QueryUtil#ALL_POS} will return the full result set.
 	 * </p>
 	 *
 	 * @param status the status to search with
+	 * @param groupId the group ID to search with
+	 * @param portletId the portlet ID to search with
+	 * @param plId the pl ID to search with
 	 * @param start the lower bound of the range of banners to return
 	 * @param end the upper bound of the range of banners to return (not inclusive)
 	 * @param orderByComparator the comparator to order the results by
 	 * @return the ordered range of matching banners
 	 * @throws SystemException if a system exception occurred
 	 */
-	public List<Banner> findByStatus(int status, int start, int end,
+	public List<Banner> findByStatus(int status, long groupId,
+		String portletId, long plId, int start, int end,
 		OrderByComparator orderByComparator) throws SystemException {
 		Object[] finderArgs = new Object[] {
-				status,
+				status, groupId, portletId, plId,
 				
 				String.valueOf(start), String.valueOf(end),
 				String.valueOf(orderByComparator)
@@ -1383,16 +1591,32 @@ public class BannerPersistenceImpl extends BasePersistenceImpl<Banner>
 			StringBundler query = null;
 
 			if (orderByComparator != null) {
-				query = new StringBundler(3 +
+				query = new StringBundler(6 +
 						(orderByComparator.getOrderByFields().length * 3));
 			}
 			else {
-				query = new StringBundler(3);
+				query = new StringBundler(6);
 			}
 
 			query.append(_SQL_SELECT_BANNER_WHERE);
 
 			query.append(_FINDER_COLUMN_STATUS_STATUS_2);
+
+			query.append(_FINDER_COLUMN_STATUS_GROUPID_2);
+
+			if (portletId == null) {
+				query.append(_FINDER_COLUMN_STATUS_PORTLETID_1);
+			}
+			else {
+				if (portletId.equals(StringPool.BLANK)) {
+					query.append(_FINDER_COLUMN_STATUS_PORTLETID_3);
+				}
+				else {
+					query.append(_FINDER_COLUMN_STATUS_PORTLETID_2);
+				}
+			}
+
+			query.append(_FINDER_COLUMN_STATUS_PLID_2);
 
 			if (orderByComparator != null) {
 				appendOrderByComparator(query, _ORDER_BY_ENTITY_ALIAS,
@@ -1415,6 +1639,14 @@ public class BannerPersistenceImpl extends BasePersistenceImpl<Banner>
 				QueryPos qPos = QueryPos.getInstance(q);
 
 				qPos.add(status);
+
+				qPos.add(groupId);
+
+				if (portletId != null) {
+					qPos.add(portletId);
+				}
+
+				qPos.add(plId);
 
 				list = (List<Banner>)QueryUtil.list(q, getDialect(), start, end);
 			}
@@ -1441,30 +1673,43 @@ public class BannerPersistenceImpl extends BasePersistenceImpl<Banner>
 	}
 
 	/**
-	 * Finds the first banner in the ordered set where status = &#63;.
+	 * Finds the first banner in the ordered set where status = &#63; and groupId = &#63; and portletId = &#63; and plId = &#63;.
 	 *
 	 * <p>
 	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link com.liferay.portal.kernel.dao.orm.QueryUtil#ALL_POS} will return the full result set.
 	 * </p>
 	 *
 	 * @param status the status to search with
+	 * @param groupId the group ID to search with
+	 * @param portletId the portlet ID to search with
+	 * @param plId the pl ID to search with
 	 * @param orderByComparator the comparator to order the set by
 	 * @return the first matching banner
 	 * @throws br.com.seatecnologia.banner.NoSuchBannerException if a matching banner could not be found
 	 * @throws SystemException if a system exception occurred
 	 */
-	public Banner findByStatus_First(int status,
-		OrderByComparator orderByComparator)
+	public Banner findByStatus_First(int status, long groupId,
+		String portletId, long plId, OrderByComparator orderByComparator)
 		throws NoSuchBannerException, SystemException {
-		List<Banner> list = findByStatus(status, 0, 1, orderByComparator);
+		List<Banner> list = findByStatus(status, groupId, portletId, plId, 0,
+				1, orderByComparator);
 
 		if (list.isEmpty()) {
-			StringBundler msg = new StringBundler(4);
+			StringBundler msg = new StringBundler(10);
 
 			msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
 			msg.append("status=");
 			msg.append(status);
+
+			msg.append(", groupId=");
+			msg.append(groupId);
+
+			msg.append(", portletId=");
+			msg.append(portletId);
+
+			msg.append(", plId=");
+			msg.append(plId);
 
 			msg.append(StringPool.CLOSE_CURLY_BRACE);
 
@@ -1476,33 +1721,45 @@ public class BannerPersistenceImpl extends BasePersistenceImpl<Banner>
 	}
 
 	/**
-	 * Finds the last banner in the ordered set where status = &#63;.
+	 * Finds the last banner in the ordered set where status = &#63; and groupId = &#63; and portletId = &#63; and plId = &#63;.
 	 *
 	 * <p>
 	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link com.liferay.portal.kernel.dao.orm.QueryUtil#ALL_POS} will return the full result set.
 	 * </p>
 	 *
 	 * @param status the status to search with
+	 * @param groupId the group ID to search with
+	 * @param portletId the portlet ID to search with
+	 * @param plId the pl ID to search with
 	 * @param orderByComparator the comparator to order the set by
 	 * @return the last matching banner
 	 * @throws br.com.seatecnologia.banner.NoSuchBannerException if a matching banner could not be found
 	 * @throws SystemException if a system exception occurred
 	 */
-	public Banner findByStatus_Last(int status,
-		OrderByComparator orderByComparator)
+	public Banner findByStatus_Last(int status, long groupId, String portletId,
+		long plId, OrderByComparator orderByComparator)
 		throws NoSuchBannerException, SystemException {
-		int count = countByStatus(status);
+		int count = countByStatus(status, groupId, portletId, plId);
 
-		List<Banner> list = findByStatus(status, count - 1, count,
-				orderByComparator);
+		List<Banner> list = findByStatus(status, groupId, portletId, plId,
+				count - 1, count, orderByComparator);
 
 		if (list.isEmpty()) {
-			StringBundler msg = new StringBundler(4);
+			StringBundler msg = new StringBundler(10);
 
 			msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
 			msg.append("status=");
 			msg.append(status);
+
+			msg.append(", groupId=");
+			msg.append(groupId);
+
+			msg.append(", portletId=");
+			msg.append(portletId);
+
+			msg.append(", plId=");
+			msg.append(plId);
 
 			msg.append(StringPool.CLOSE_CURLY_BRACE);
 
@@ -1514,7 +1771,7 @@ public class BannerPersistenceImpl extends BasePersistenceImpl<Banner>
 	}
 
 	/**
-	 * Finds the banners before and after the current banner in the ordered set where status = &#63;.
+	 * Finds the banners before and after the current banner in the ordered set where status = &#63; and groupId = &#63; and portletId = &#63; and plId = &#63;.
 	 *
 	 * <p>
 	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link com.liferay.portal.kernel.dao.orm.QueryUtil#ALL_POS} will return the full result set.
@@ -1522,12 +1779,16 @@ public class BannerPersistenceImpl extends BasePersistenceImpl<Banner>
 	 *
 	 * @param bannerId the primary key of the current banner
 	 * @param status the status to search with
+	 * @param groupId the group ID to search with
+	 * @param portletId the portlet ID to search with
+	 * @param plId the pl ID to search with
 	 * @param orderByComparator the comparator to order the set by
 	 * @return the previous, current, and next banner
 	 * @throws br.com.seatecnologia.banner.NoSuchBannerException if a banner with the primary key could not be found
 	 * @throws SystemException if a system exception occurred
 	 */
 	public Banner[] findByStatus_PrevAndNext(long bannerId, int status,
+		long groupId, String portletId, long plId,
 		OrderByComparator orderByComparator)
 		throws NoSuchBannerException, SystemException {
 		Banner banner = findByPrimaryKey(bannerId);
@@ -1540,12 +1801,12 @@ public class BannerPersistenceImpl extends BasePersistenceImpl<Banner>
 			Banner[] array = new BannerImpl[3];
 
 			array[0] = getByStatus_PrevAndNext(session, banner, status,
-					orderByComparator, true);
+					groupId, portletId, plId, orderByComparator, true);
 
 			array[1] = banner;
 
 			array[2] = getByStatus_PrevAndNext(session, banner, status,
-					orderByComparator, false);
+					groupId, portletId, plId, orderByComparator, false);
 
 			return array;
 		}
@@ -1558,7 +1819,8 @@ public class BannerPersistenceImpl extends BasePersistenceImpl<Banner>
 	}
 
 	protected Banner getByStatus_PrevAndNext(Session session, Banner banner,
-		int status, OrderByComparator orderByComparator, boolean previous) {
+		int status, long groupId, String portletId, long plId,
+		OrderByComparator orderByComparator, boolean previous) {
 		StringBundler query = null;
 
 		if (orderByComparator != null) {
@@ -1572,6 +1834,22 @@ public class BannerPersistenceImpl extends BasePersistenceImpl<Banner>
 		query.append(_SQL_SELECT_BANNER_WHERE);
 
 		query.append(_FINDER_COLUMN_STATUS_STATUS_2);
+
+		query.append(_FINDER_COLUMN_STATUS_GROUPID_2);
+
+		if (portletId == null) {
+			query.append(_FINDER_COLUMN_STATUS_PORTLETID_1);
+		}
+		else {
+			if (portletId.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_STATUS_PORTLETID_3);
+			}
+			else {
+				query.append(_FINDER_COLUMN_STATUS_PORTLETID_2);
+			}
+		}
+
+		query.append(_FINDER_COLUMN_STATUS_PLID_2);
 
 		if (orderByComparator != null) {
 			String[] orderByFields = orderByComparator.getOrderByFields();
@@ -1642,6 +1920,14 @@ public class BannerPersistenceImpl extends BasePersistenceImpl<Banner>
 
 		qPos.add(status);
 
+		qPos.add(groupId);
+
+		if (portletId != null) {
+			qPos.add(portletId);
+		}
+
+		qPos.add(plId);
+
 		if (orderByComparator != null) {
 			Object[] values = orderByComparator.getOrderByValues(banner);
 
@@ -1661,24 +1947,36 @@ public class BannerPersistenceImpl extends BasePersistenceImpl<Banner>
 	}
 
 	/**
-	 * Finds the banner where position = &#63; or throws a {@link br.com.seatecnologia.banner.NoSuchBannerException} if it could not be found.
+	 * Finds the banner where position = &#63; and groupId = &#63; and portletId = &#63; and plId = &#63; or throws a {@link br.com.seatecnologia.banner.NoSuchBannerException} if it could not be found.
 	 *
 	 * @param position the position to search with
+	 * @param groupId the group ID to search with
+	 * @param portletId the portlet ID to search with
+	 * @param plId the pl ID to search with
 	 * @return the matching banner
 	 * @throws br.com.seatecnologia.banner.NoSuchBannerException if a matching banner could not be found
 	 * @throws SystemException if a system exception occurred
 	 */
-	public Banner findByPosition(int position)
-		throws NoSuchBannerException, SystemException {
-		Banner banner = fetchByPosition(position);
+	public Banner findByPosition(int position, long groupId, String portletId,
+		long plId) throws NoSuchBannerException, SystemException {
+		Banner banner = fetchByPosition(position, groupId, portletId, plId);
 
 		if (banner == null) {
-			StringBundler msg = new StringBundler(4);
+			StringBundler msg = new StringBundler(10);
 
 			msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
 			msg.append("position=");
 			msg.append(position);
+
+			msg.append(", groupId=");
+			msg.append(groupId);
+
+			msg.append(", portletId=");
+			msg.append(portletId);
+
+			msg.append(", plId=");
+			msg.append(plId);
 
 			msg.append(StringPool.CLOSE_CURLY_BRACE);
 
@@ -1693,26 +1991,33 @@ public class BannerPersistenceImpl extends BasePersistenceImpl<Banner>
 	}
 
 	/**
-	 * Finds the banner where position = &#63; or returns <code>null</code> if it could not be found. Uses the finder cache.
+	 * Finds the banner where position = &#63; and groupId = &#63; and portletId = &#63; and plId = &#63; or returns <code>null</code> if it could not be found. Uses the finder cache.
 	 *
 	 * @param position the position to search with
+	 * @param groupId the group ID to search with
+	 * @param portletId the portlet ID to search with
+	 * @param plId the pl ID to search with
 	 * @return the matching banner, or <code>null</code> if a matching banner could not be found
 	 * @throws SystemException if a system exception occurred
 	 */
-	public Banner fetchByPosition(int position) throws SystemException {
-		return fetchByPosition(position, true);
+	public Banner fetchByPosition(int position, long groupId, String portletId,
+		long plId) throws SystemException {
+		return fetchByPosition(position, groupId, portletId, plId, true);
 	}
 
 	/**
-	 * Finds the banner where position = &#63; or returns <code>null</code> if it could not be found, optionally using the finder cache.
+	 * Finds the banner where position = &#63; and groupId = &#63; and portletId = &#63; and plId = &#63; or returns <code>null</code> if it could not be found, optionally using the finder cache.
 	 *
 	 * @param position the position to search with
+	 * @param groupId the group ID to search with
+	 * @param portletId the portlet ID to search with
+	 * @param plId the pl ID to search with
 	 * @return the matching banner, or <code>null</code> if a matching banner could not be found
 	 * @throws SystemException if a system exception occurred
 	 */
-	public Banner fetchByPosition(int position, boolean retrieveFromCache)
-		throws SystemException {
-		Object[] finderArgs = new Object[] { position };
+	public Banner fetchByPosition(int position, long groupId, String portletId,
+		long plId, boolean retrieveFromCache) throws SystemException {
+		Object[] finderArgs = new Object[] { position, groupId, portletId, plId };
 
 		Object result = null;
 
@@ -1722,11 +2027,27 @@ public class BannerPersistenceImpl extends BasePersistenceImpl<Banner>
 		}
 
 		if (result == null) {
-			StringBundler query = new StringBundler(3);
+			StringBundler query = new StringBundler(6);
 
 			query.append(_SQL_SELECT_BANNER_WHERE);
 
 			query.append(_FINDER_COLUMN_POSITION_POSITION_2);
+
+			query.append(_FINDER_COLUMN_POSITION_GROUPID_2);
+
+			if (portletId == null) {
+				query.append(_FINDER_COLUMN_POSITION_PORTLETID_1);
+			}
+			else {
+				if (portletId.equals(StringPool.BLANK)) {
+					query.append(_FINDER_COLUMN_POSITION_PORTLETID_3);
+				}
+				else {
+					query.append(_FINDER_COLUMN_POSITION_PORTLETID_2);
+				}
+			}
+
+			query.append(_FINDER_COLUMN_POSITION_PLID_2);
 
 			query.append(BannerModelImpl.ORDER_BY_JPQL);
 
@@ -1743,6 +2064,14 @@ public class BannerPersistenceImpl extends BasePersistenceImpl<Banner>
 
 				qPos.add(position);
 
+				qPos.add(groupId);
+
+				if (portletId != null) {
+					qPos.add(portletId);
+				}
+
+				qPos.add(plId);
+
 				List<Banner> list = q.list();
 
 				result = list;
@@ -1758,7 +2087,11 @@ public class BannerPersistenceImpl extends BasePersistenceImpl<Banner>
 
 					cacheResult(banner);
 
-					if ((banner.getPosition() != position)) {
+					if ((banner.getPosition() != position) ||
+							(banner.getGroupId() != groupId) ||
+							(banner.getPortletId() == null) ||
+							!banner.getPortletId().equals(portletId) ||
+							(banner.getPlId() != plId)) {
 						FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_POSITION,
 							finderArgs, banner);
 					}
@@ -1897,27 +2230,33 @@ public class BannerPersistenceImpl extends BasePersistenceImpl<Banner>
 	}
 
 	/**
-	 * Removes all the banners where groupId = &#63; from the database.
+	 * Removes all the banners where groupId = &#63; and portletId = &#63; and plId = &#63; from the database.
 	 *
 	 * @param groupId the group ID to search with
+	 * @param portletId the portlet ID to search with
+	 * @param plId the pl ID to search with
 	 * @throws SystemException if a system exception occurred
 	 */
-	public void removeByGroupId(long groupId) throws SystemException {
-		for (Banner banner : findByGroupId(groupId)) {
+	public void removeByGroupId(long groupId, String portletId, long plId)
+		throws SystemException {
+		for (Banner banner : findByGroupId(groupId, portletId, plId)) {
 			bannerPersistence.remove(banner);
 		}
 	}
 
 	/**
-	 * Removes all the banners where status = &#63; and groupId = &#63; from the database.
+	 * Removes all the banners where status = &#63; and groupId = &#63; and portletId = &#63; and plId = &#63; from the database.
 	 *
 	 * @param status the status to search with
 	 * @param groupId the group ID to search with
+	 * @param portletId the portlet ID to search with
+	 * @param plId the pl ID to search with
 	 * @throws SystemException if a system exception occurred
 	 */
-	public void removeByStatusGroupId(int status, long groupId)
-		throws SystemException {
-		for (Banner banner : findByStatusGroupId(status, groupId)) {
+	public void removeByStatusGroupId(int status, long groupId,
+		String portletId, long plId) throws SystemException {
+		for (Banner banner : findByStatusGroupId(status, groupId, portletId,
+				plId)) {
 			bannerPersistence.remove(banner);
 		}
 	}
@@ -1936,26 +2275,33 @@ public class BannerPersistenceImpl extends BasePersistenceImpl<Banner>
 	}
 
 	/**
-	 * Removes all the banners where status = &#63; from the database.
+	 * Removes all the banners where status = &#63; and groupId = &#63; and portletId = &#63; and plId = &#63; from the database.
 	 *
 	 * @param status the status to search with
+	 * @param groupId the group ID to search with
+	 * @param portletId the portlet ID to search with
+	 * @param plId the pl ID to search with
 	 * @throws SystemException if a system exception occurred
 	 */
-	public void removeByStatus(int status) throws SystemException {
-		for (Banner banner : findByStatus(status)) {
+	public void removeByStatus(int status, long groupId, String portletId,
+		long plId) throws SystemException {
+		for (Banner banner : findByStatus(status, groupId, portletId, plId)) {
 			bannerPersistence.remove(banner);
 		}
 	}
 
 	/**
-	 * Removes the banner where position = &#63; from the database.
+	 * Removes the banner where position = &#63; and groupId = &#63; and portletId = &#63; and plId = &#63; from the database.
 	 *
 	 * @param position the position to search with
+	 * @param groupId the group ID to search with
+	 * @param portletId the portlet ID to search with
+	 * @param plId the pl ID to search with
 	 * @throws SystemException if a system exception occurred
 	 */
-	public void removeByPosition(int position)
-		throws NoSuchBannerException, SystemException {
-		Banner banner = findByPosition(position);
+	public void removeByPosition(int position, long groupId, String portletId,
+		long plId) throws NoSuchBannerException, SystemException {
+		Banner banner = findByPosition(position, groupId, portletId, plId);
 
 		bannerPersistence.remove(banner);
 	}
@@ -1972,24 +2318,41 @@ public class BannerPersistenceImpl extends BasePersistenceImpl<Banner>
 	}
 
 	/**
-	 * Counts all the banners where groupId = &#63;.
+	 * Counts all the banners where groupId = &#63; and portletId = &#63; and plId = &#63;.
 	 *
 	 * @param groupId the group ID to search with
+	 * @param portletId the portlet ID to search with
+	 * @param plId the pl ID to search with
 	 * @return the number of matching banners
 	 * @throws SystemException if a system exception occurred
 	 */
-	public int countByGroupId(long groupId) throws SystemException {
-		Object[] finderArgs = new Object[] { groupId };
+	public int countByGroupId(long groupId, String portletId, long plId)
+		throws SystemException {
+		Object[] finderArgs = new Object[] { groupId, portletId, plId };
 
 		Long count = (Long)FinderCacheUtil.getResult(FINDER_PATH_COUNT_BY_GROUPID,
 				finderArgs, this);
 
 		if (count == null) {
-			StringBundler query = new StringBundler(2);
+			StringBundler query = new StringBundler(4);
 
 			query.append(_SQL_COUNT_BANNER_WHERE);
 
 			query.append(_FINDER_COLUMN_GROUPID_GROUPID_2);
+
+			if (portletId == null) {
+				query.append(_FINDER_COLUMN_GROUPID_PORTLETID_1);
+			}
+			else {
+				if (portletId.equals(StringPool.BLANK)) {
+					query.append(_FINDER_COLUMN_GROUPID_PORTLETID_3);
+				}
+				else {
+					query.append(_FINDER_COLUMN_GROUPID_PORTLETID_2);
+				}
+			}
+
+			query.append(_FINDER_COLUMN_GROUPID_PLID_2);
 
 			String sql = query.toString();
 
@@ -2003,6 +2366,12 @@ public class BannerPersistenceImpl extends BasePersistenceImpl<Banner>
 				QueryPos qPos = QueryPos.getInstance(q);
 
 				qPos.add(groupId);
+
+				if (portletId != null) {
+					qPos.add(portletId);
+				}
+
+				qPos.add(plId);
 
 				count = (Long)q.uniqueResult();
 			}
@@ -2025,28 +2394,44 @@ public class BannerPersistenceImpl extends BasePersistenceImpl<Banner>
 	}
 
 	/**
-	 * Counts all the banners where status = &#63; and groupId = &#63;.
+	 * Counts all the banners where status = &#63; and groupId = &#63; and portletId = &#63; and plId = &#63;.
 	 *
 	 * @param status the status to search with
 	 * @param groupId the group ID to search with
+	 * @param portletId the portlet ID to search with
+	 * @param plId the pl ID to search with
 	 * @return the number of matching banners
 	 * @throws SystemException if a system exception occurred
 	 */
-	public int countByStatusGroupId(int status, long groupId)
-		throws SystemException {
-		Object[] finderArgs = new Object[] { status, groupId };
+	public int countByStatusGroupId(int status, long groupId, String portletId,
+		long plId) throws SystemException {
+		Object[] finderArgs = new Object[] { status, groupId, portletId, plId };
 
 		Long count = (Long)FinderCacheUtil.getResult(FINDER_PATH_COUNT_BY_STATUSGROUPID,
 				finderArgs, this);
 
 		if (count == null) {
-			StringBundler query = new StringBundler(3);
+			StringBundler query = new StringBundler(5);
 
 			query.append(_SQL_COUNT_BANNER_WHERE);
 
 			query.append(_FINDER_COLUMN_STATUSGROUPID_STATUS_2);
 
 			query.append(_FINDER_COLUMN_STATUSGROUPID_GROUPID_2);
+
+			if (portletId == null) {
+				query.append(_FINDER_COLUMN_STATUSGROUPID_PORTLETID_1);
+			}
+			else {
+				if (portletId.equals(StringPool.BLANK)) {
+					query.append(_FINDER_COLUMN_STATUSGROUPID_PORTLETID_3);
+				}
+				else {
+					query.append(_FINDER_COLUMN_STATUSGROUPID_PORTLETID_2);
+				}
+			}
+
+			query.append(_FINDER_COLUMN_STATUSGROUPID_PLID_2);
 
 			String sql = query.toString();
 
@@ -2062,6 +2447,12 @@ public class BannerPersistenceImpl extends BasePersistenceImpl<Banner>
 				qPos.add(status);
 
 				qPos.add(groupId);
+
+				if (portletId != null) {
+					qPos.add(portletId);
+				}
+
+				qPos.add(plId);
 
 				count = (Long)q.uniqueResult();
 			}
@@ -2137,24 +2528,44 @@ public class BannerPersistenceImpl extends BasePersistenceImpl<Banner>
 	}
 
 	/**
-	 * Counts all the banners where status = &#63;.
+	 * Counts all the banners where status = &#63; and groupId = &#63; and portletId = &#63; and plId = &#63;.
 	 *
 	 * @param status the status to search with
+	 * @param groupId the group ID to search with
+	 * @param portletId the portlet ID to search with
+	 * @param plId the pl ID to search with
 	 * @return the number of matching banners
 	 * @throws SystemException if a system exception occurred
 	 */
-	public int countByStatus(int status) throws SystemException {
-		Object[] finderArgs = new Object[] { status };
+	public int countByStatus(int status, long groupId, String portletId,
+		long plId) throws SystemException {
+		Object[] finderArgs = new Object[] { status, groupId, portletId, plId };
 
 		Long count = (Long)FinderCacheUtil.getResult(FINDER_PATH_COUNT_BY_STATUS,
 				finderArgs, this);
 
 		if (count == null) {
-			StringBundler query = new StringBundler(2);
+			StringBundler query = new StringBundler(5);
 
 			query.append(_SQL_COUNT_BANNER_WHERE);
 
 			query.append(_FINDER_COLUMN_STATUS_STATUS_2);
+
+			query.append(_FINDER_COLUMN_STATUS_GROUPID_2);
+
+			if (portletId == null) {
+				query.append(_FINDER_COLUMN_STATUS_PORTLETID_1);
+			}
+			else {
+				if (portletId.equals(StringPool.BLANK)) {
+					query.append(_FINDER_COLUMN_STATUS_PORTLETID_3);
+				}
+				else {
+					query.append(_FINDER_COLUMN_STATUS_PORTLETID_2);
+				}
+			}
+
+			query.append(_FINDER_COLUMN_STATUS_PLID_2);
 
 			String sql = query.toString();
 
@@ -2168,6 +2579,14 @@ public class BannerPersistenceImpl extends BasePersistenceImpl<Banner>
 				QueryPos qPos = QueryPos.getInstance(q);
 
 				qPos.add(status);
+
+				qPos.add(groupId);
+
+				if (portletId != null) {
+					qPos.add(portletId);
+				}
+
+				qPos.add(plId);
 
 				count = (Long)q.uniqueResult();
 			}
@@ -2190,24 +2609,44 @@ public class BannerPersistenceImpl extends BasePersistenceImpl<Banner>
 	}
 
 	/**
-	 * Counts all the banners where position = &#63;.
+	 * Counts all the banners where position = &#63; and groupId = &#63; and portletId = &#63; and plId = &#63;.
 	 *
 	 * @param position the position to search with
+	 * @param groupId the group ID to search with
+	 * @param portletId the portlet ID to search with
+	 * @param plId the pl ID to search with
 	 * @return the number of matching banners
 	 * @throws SystemException if a system exception occurred
 	 */
-	public int countByPosition(int position) throws SystemException {
-		Object[] finderArgs = new Object[] { position };
+	public int countByPosition(int position, long groupId, String portletId,
+		long plId) throws SystemException {
+		Object[] finderArgs = new Object[] { position, groupId, portletId, plId };
 
 		Long count = (Long)FinderCacheUtil.getResult(FINDER_PATH_COUNT_BY_POSITION,
 				finderArgs, this);
 
 		if (count == null) {
-			StringBundler query = new StringBundler(2);
+			StringBundler query = new StringBundler(5);
 
 			query.append(_SQL_COUNT_BANNER_WHERE);
 
 			query.append(_FINDER_COLUMN_POSITION_POSITION_2);
+
+			query.append(_FINDER_COLUMN_POSITION_GROUPID_2);
+
+			if (portletId == null) {
+				query.append(_FINDER_COLUMN_POSITION_PORTLETID_1);
+			}
+			else {
+				if (portletId.equals(StringPool.BLANK)) {
+					query.append(_FINDER_COLUMN_POSITION_PORTLETID_3);
+				}
+				else {
+					query.append(_FINDER_COLUMN_POSITION_PORTLETID_2);
+				}
+			}
+
+			query.append(_FINDER_COLUMN_POSITION_PLID_2);
 
 			String sql = query.toString();
 
@@ -2221,6 +2660,14 @@ public class BannerPersistenceImpl extends BasePersistenceImpl<Banner>
 				QueryPos qPos = QueryPos.getInstance(q);
 
 				qPos.add(position);
+
+				qPos.add(groupId);
+
+				if (portletId != null) {
+					qPos.add(portletId);
+				}
+
+				qPos.add(plId);
 
 				count = (Long)q.uniqueResult();
 			}
@@ -2323,12 +2770,30 @@ public class BannerPersistenceImpl extends BasePersistenceImpl<Banner>
 	private static final String _SQL_SELECT_BANNER_WHERE = "SELECT banner FROM Banner banner WHERE ";
 	private static final String _SQL_COUNT_BANNER = "SELECT COUNT(banner) FROM Banner banner";
 	private static final String _SQL_COUNT_BANNER_WHERE = "SELECT COUNT(banner) FROM Banner banner WHERE ";
-	private static final String _FINDER_COLUMN_GROUPID_GROUPID_2 = "banner.groupId = ?";
+	private static final String _FINDER_COLUMN_GROUPID_GROUPID_2 = "banner.groupId = ? AND ";
+	private static final String _FINDER_COLUMN_GROUPID_PORTLETID_1 = "banner.portletId IS NULL AND ";
+	private static final String _FINDER_COLUMN_GROUPID_PORTLETID_2 = "banner.portletId = ? AND ";
+	private static final String _FINDER_COLUMN_GROUPID_PORTLETID_3 = "(banner.portletId IS NULL OR banner.portletId = ?) AND ";
+	private static final String _FINDER_COLUMN_GROUPID_PLID_2 = "banner.plId = ?";
 	private static final String _FINDER_COLUMN_STATUSGROUPID_STATUS_2 = "banner.status = ? AND ";
-	private static final String _FINDER_COLUMN_STATUSGROUPID_GROUPID_2 = "banner.groupId = ?";
+	private static final String _FINDER_COLUMN_STATUSGROUPID_GROUPID_2 = "banner.groupId = ? AND ";
+	private static final String _FINDER_COLUMN_STATUSGROUPID_PORTLETID_1 = "banner.portletId IS NULL AND ";
+	private static final String _FINDER_COLUMN_STATUSGROUPID_PORTLETID_2 = "banner.portletId = ? AND ";
+	private static final String _FINDER_COLUMN_STATUSGROUPID_PORTLETID_3 = "(banner.portletId IS NULL OR banner.portletId = ?) AND ";
+	private static final String _FINDER_COLUMN_STATUSGROUPID_PLID_2 = "banner.plId = ?";
 	private static final String _FINDER_COLUMN_BANNERID_BANNERID_2 = "banner.bannerId = ?";
-	private static final String _FINDER_COLUMN_STATUS_STATUS_2 = "banner.status = ?";
-	private static final String _FINDER_COLUMN_POSITION_POSITION_2 = "banner.position = ?";
+	private static final String _FINDER_COLUMN_STATUS_STATUS_2 = "banner.status = ? AND ";
+	private static final String _FINDER_COLUMN_STATUS_GROUPID_2 = "banner.groupId = ? AND ";
+	private static final String _FINDER_COLUMN_STATUS_PORTLETID_1 = "banner.portletId IS NULL AND ";
+	private static final String _FINDER_COLUMN_STATUS_PORTLETID_2 = "banner.portletId = ? AND ";
+	private static final String _FINDER_COLUMN_STATUS_PORTLETID_3 = "(banner.portletId IS NULL OR banner.portletId = ?) AND ";
+	private static final String _FINDER_COLUMN_STATUS_PLID_2 = "banner.plId = ?";
+	private static final String _FINDER_COLUMN_POSITION_POSITION_2 = "banner.position = ? AND ";
+	private static final String _FINDER_COLUMN_POSITION_GROUPID_2 = "banner.groupId = ? AND ";
+	private static final String _FINDER_COLUMN_POSITION_PORTLETID_1 = "banner.portletId IS NULL AND ";
+	private static final String _FINDER_COLUMN_POSITION_PORTLETID_2 = "banner.portletId = ? AND ";
+	private static final String _FINDER_COLUMN_POSITION_PORTLETID_3 = "(banner.portletId IS NULL OR banner.portletId = ?) AND ";
+	private static final String _FINDER_COLUMN_POSITION_PLID_2 = "banner.plId = ?";
 	private static final String _ORDER_BY_ENTITY_ALIAS = "banner.";
 	private static final String _NO_SUCH_ENTITY_WITH_PRIMARY_KEY = "No Banner exists with the primary key ";
 	private static final String _NO_SUCH_ENTITY_WITH_KEY = "No Banner exists with the key {";

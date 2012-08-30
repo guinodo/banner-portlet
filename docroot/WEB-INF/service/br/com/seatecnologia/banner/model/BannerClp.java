@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2000-2010 Liferay, Inc. All rights reserved.
+ * Copyright (c) 2000-2011 Liferay, Inc. All rights reserved.
  *
  * This library is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the Free
@@ -136,6 +136,22 @@ public class BannerClp extends BaseModelImpl<Banner> implements Banner {
 		_groupId = groupId;
 	}
 
+	public String getPortletId() {
+		return _portletId;
+	}
+
+	public void setPortletId(String portletId) {
+		_portletId = portletId;
+	}
+
+	public long getPlId() {
+		return _plId;
+	}
+
+	public void setPlId(long plId) {
+		_plId = plId;
+	}
+
 	public void persist() throws SystemException {
 		BannerLocalServiceUtil.updateBanner(this);
 	}
@@ -165,6 +181,8 @@ public class BannerClp extends BaseModelImpl<Banner> implements Banner {
 		clone.setType(getType());
 		clone.setStatus(getStatus());
 		clone.setGroupId(getGroupId());
+		clone.setPortletId(getPortletId());
+		clone.setPlId(getPlId());
 
 		return clone;
 	}
@@ -221,7 +239,7 @@ public class BannerClp extends BaseModelImpl<Banner> implements Banner {
 
 	@Override
 	public String toString() {
-		StringBundler sb = new StringBundler(21);
+		StringBundler sb = new StringBundler(25);
 
 		sb.append("{bannerId=");
 		sb.append(getBannerId());
@@ -243,13 +261,17 @@ public class BannerClp extends BaseModelImpl<Banner> implements Banner {
 		sb.append(getStatus());
 		sb.append(", groupId=");
 		sb.append(getGroupId());
+		sb.append(", portletId=");
+		sb.append(getPortletId());
+		sb.append(", plId=");
+		sb.append(getPlId());
 		sb.append("}");
 
 		return sb.toString();
 	}
 
 	public String toXmlString() {
-		StringBundler sb = new StringBundler(34);
+		StringBundler sb = new StringBundler(40);
 
 		sb.append("<model><model-name>");
 		sb.append("br.com.seatecnologia.banner.model.Banner");
@@ -295,6 +317,14 @@ public class BannerClp extends BaseModelImpl<Banner> implements Banner {
 			"<column><column-name>groupId</column-name><column-value><![CDATA[");
 		sb.append(getGroupId());
 		sb.append("]]></column-value></column>");
+		sb.append(
+			"<column><column-name>portletId</column-name><column-value><![CDATA[");
+		sb.append(getPortletId());
+		sb.append("]]></column-value></column>");
+		sb.append(
+			"<column><column-name>plId</column-name><column-value><![CDATA[");
+		sb.append(getPlId());
+		sb.append("]]></column-value></column>");
 
 		sb.append("</model>");
 
@@ -311,4 +341,6 @@ public class BannerClp extends BaseModelImpl<Banner> implements Banner {
 	private int _type;
 	private int _status;
 	private long _groupId;
+	private String _portletId;
+	private long _plId;
 }

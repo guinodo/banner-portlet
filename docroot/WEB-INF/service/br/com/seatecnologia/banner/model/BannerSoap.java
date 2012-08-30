@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2000-2010 Liferay, Inc. All rights reserved.
+ * Copyright (c) 2000-2011 Liferay, Inc. All rights reserved.
  *
  * This library is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the Free
@@ -39,6 +39,8 @@ public class BannerSoap implements Serializable {
 		soapModel.setType(model.getType());
 		soapModel.setStatus(model.getStatus());
 		soapModel.setGroupId(model.getGroupId());
+		soapModel.setPortletId(model.getPortletId());
+		soapModel.setPlId(model.getPlId());
 
 		return soapModel;
 	}
@@ -171,6 +173,22 @@ public class BannerSoap implements Serializable {
 		_groupId = groupId;
 	}
 
+	public String getPortletId() {
+		return _portletId;
+	}
+
+	public void setPortletId(String portletId) {
+		_portletId = portletId;
+	}
+
+	public long getPlId() {
+		return _plId;
+	}
+
+	public void setPlId(long plId) {
+		_plId = plId;
+	}
+
 	private long _bannerId;
 	private String _name;
 	private String _title;
@@ -181,4 +199,6 @@ public class BannerSoap implements Serializable {
 	private int _type;
 	private int _status;
 	private long _groupId;
+	private String _portletId;
+	private long _plId;
 }

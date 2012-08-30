@@ -12,5 +12,7 @@
 		<field name="type" type="int" />
 		<field name="status" type="int" />
 		<field name="groupId" type="long" />
+		<field name="portletId" type="String" />
+		<field name="plId" type="long" />
 	</model>
 </model-hints>

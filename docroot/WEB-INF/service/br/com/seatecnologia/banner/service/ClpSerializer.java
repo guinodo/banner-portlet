@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2000-2010 Liferay, Inc. All rights reserved.
+ * Copyright (c) 2000-2011 Liferay, Inc. All rights reserved.
  *
  * This library is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the Free
@@ -203,6 +203,20 @@ public class ClpSerializer {
 
 				method9.invoke(newModel, value9);
 
+				Method method10 = newModelClass.getMethod("setPortletId",
+						new Class[] { String.class });
+
+				String value10 = oldCplModel.getPortletId();
+
+				method10.invoke(newModel, value10);
+
+				Method method11 = newModelClass.getMethod("setPlId",
+						new Class[] { Long.TYPE });
+
+				Long value11 = new Long(oldCplModel.getPlId());
+
+				method11.invoke(newModel, value11);
+
 				return newModel;
 			}
 			catch (Exception e) {
@@ -340,6 +354,19 @@ public class ClpSerializer {
 				Long value9 = (Long)method9.invoke(oldModel, (Object[])null);
 
 				newModel.setGroupId(value9);
+
+				Method method10 = oldModelClass.getMethod("getPortletId");
+
+				String value10 = (String)method10.invoke(oldModel,
+						(Object[])null);
+
+				newModel.setPortletId(value10);
+
+				Method method11 = oldModelClass.getMethod("getPlId");
+
+				Long value11 = (Long)method11.invoke(oldModel, (Object[])null);
+
+				newModel.setPlId(value11);
 
 				return newModel;
 			}

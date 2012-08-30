@@ -22,14 +22,17 @@
 			<order-column name="position" />
 		</order> 
 		
-		
 		<finder name="GroupId" return-type="Collection">
 			<finder-column name="groupId" />
+			<finder-column name="portletId" />
+			<finder-column name="plId" />
 		</finder>
 
 		<finder name="StatusGroupId" return-type="Collection">
 			<finder-column name="status" />
 			<finder-column name="groupId" />
+			<finder-column name="portletId" />
+			<finder-column name="plId" />
 		</finder>
 
 		<finder name="BannerId" return-type="Banner">
@@ -38,10 +41,16 @@
 		
 		<finder name="Status" return-type="Collection">
 			<finder-column name="status" />
+			<finder-column name="groupId" />
+			<finder-column name="portletId" />
+			<finder-column name="plId" />
 		</finder>
 		
 		<finder name="Position" return-type="Banner">
 			<finder-column name="position" />
+			<finder-column name="groupId" />
+			<finder-column name="portletId" />
+			<finder-column name="plId" />
 		</finder>
 
 	</entity>

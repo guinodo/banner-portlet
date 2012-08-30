@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2000-2010 Liferay, Inc. All rights reserved.
+ * Copyright (c) 2000-2011 Liferay, Inc. All rights reserved.
  *
  * This library is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the Free
@@ -82,23 +82,28 @@ public class BannerLocalServiceClp implements BannerLocalService {
 				"setBeanIdentifier", java.lang.String.class);
 
 		_getBannersByGroupIdMethodKey16 = new MethodKey(_classLoaderProxy.getClassName(),
-				"getBannersByGroupId", long.class, int.class, int.class);
+				"getBannersByGroupId", long.class, java.lang.String.class,
+				long.class, int.class, int.class);
 
 		_getBannersByStatusGroupIdMethodKey17 = new MethodKey(_classLoaderProxy.getClassName(),
-				"getBannersByStatusGroupId", int.class, long.class, int.class,
-				int.class);
+				"getBannersByStatusGroupId", int.class, long.class,
+				java.lang.String.class, long.class, int.class, int.class);
 
 		_getBannersByStatusMethodKey18 = new MethodKey(_classLoaderProxy.getClassName(),
-				"getBannersByStatus", int.class);
+				"getBannersByStatus", int.class, long.class,
+				java.lang.String.class, long.class);
 
 		_getBannerByPositionMethodKey19 = new MethodKey(_classLoaderProxy.getClassName(),
-				"getBannerByPosition", int.class);
+				"getBannerByPosition", int.class, long.class,
+				java.lang.String.class, long.class);
 
 		_getBannersByStatusCountMethodKey20 = new MethodKey(_classLoaderProxy.getClassName(),
-				"getBannersByStatusCount", int.class);
+				"getBannersByStatusCount", int.class, long.class,
+				java.lang.String.class, long.class);
 
 		_getCoutBannersByGroupIdMethodKey21 = new MethodKey(_classLoaderProxy.getClassName(),
-				"getCoutBannersByGroupId", long.class);
+				"getCoutBannersByGroupId", long.class, java.lang.String.class,
+				long.class);
 	}
 
 	public br.com.seatecnologia.banner.model.Banner addBanner(
@@ -535,12 +540,13 @@ public class BannerLocalServiceClp implements BannerLocalService {
 	}
 
 	public java.util.List<br.com.seatecnologia.banner.model.Banner> getBannersByGroupId(
-		long groupId, int start, int end)
+		long groupId, java.lang.String portletId, long plId, int start, int end)
 		throws com.liferay.portal.kernel.exception.SystemException {
 		Object returnObj = null;
 
 		MethodHandler methodHandler = new MethodHandler(_getBannersByGroupIdMethodKey16,
-				groupId, start, end);
+				groupId, ClpSerializer.translateInput(portletId), plId, start,
+				end);
 
 		try {
 			returnObj = _classLoaderProxy.invoke(methodHandler);
@@ -563,12 +569,14 @@ public class BannerLocalServiceClp implements BannerLocalService {
 	}
 
 	public java.util.List<br.com.seatecnologia.banner.model.Banner> getBannersByStatusGroupId(
-		int status, long groupId, int start, int end)
+		int status, long groupId, java.lang.String portletId, long plId,
+		int start, int end)
 		throws com.liferay.portal.kernel.exception.SystemException {
 		Object returnObj = null;
 
 		MethodHandler methodHandler = new MethodHandler(_getBannersByStatusGroupIdMethodKey17,
-				status, groupId, start, end);
+				status, groupId, ClpSerializer.translateInput(portletId), plId,
+				start, end);
 
 		try {
 			returnObj = _classLoaderProxy.invoke(methodHandler);
@@ -591,11 +599,12 @@ public class BannerLocalServiceClp implements BannerLocalService {
 	}
 
 	public java.util.List<br.com.seatecnologia.banner.model.Banner> getBannersByStatus(
-		int status) throws com.liferay.portal.kernel.exception.SystemException {
+		int status, long groupId, java.lang.String portletId, long plId)
+		throws com.liferay.portal.kernel.exception.SystemException {
 		Object returnObj = null;
 
 		MethodHandler methodHandler = new MethodHandler(_getBannersByStatusMethodKey18,
-				status);
+				status, groupId, ClpSerializer.translateInput(portletId), plId);
 
 		try {
 			returnObj = _classLoaderProxy.invoke(methodHandler);
@@ -618,13 +627,13 @@ public class BannerLocalServiceClp implements BannerLocalService {
 	}
 
 	public br.com.seatecnologia.banner.model.Banner getBannerByPosition(
-		int position)
+		int position, long groupId, java.lang.String portletId, long plId)
 		throws br.com.seatecnologia.banner.NoSuchBannerException,
 			com.liferay.portal.kernel.exception.SystemException {
 		Object returnObj = null;
 
 		MethodHandler methodHandler = new MethodHandler(_getBannerByPositionMethodKey19,
-				position);
+				position, groupId, ClpSerializer.translateInput(portletId), plId);
 
 		try {
 			returnObj = _classLoaderProxy.invoke(methodHandler);
@@ -650,12 +659,13 @@ public class BannerLocalServiceClp implements BannerLocalService {
 		return (br.com.seatecnologia.banner.model.Banner)ClpSerializer.translateOutput(returnObj);
 	}
 
-	public int getBannersByStatusCount(int status)
+	public int getBannersByStatusCount(int status, long groupId,
+		java.lang.String portletId, long plId)
 		throws com.liferay.portal.kernel.exception.SystemException {
 		Object returnObj = null;
 
 		MethodHandler methodHandler = new MethodHandler(_getBannersByStatusCountMethodKey20,
-				status);
+				status, groupId, ClpSerializer.translateInput(portletId), plId);
 
 		try {
 			returnObj = _classLoaderProxy.invoke(methodHandler);
@@ -677,12 +687,13 @@ public class BannerLocalServiceClp implements BannerLocalService {
 		return ((Integer)returnObj).intValue();
 	}
 
-	public int getCoutBannersByGroupId(long groupId)
+	public int getCoutBannersByGroupId(long groupId,
+		java.lang.String portletId, long plId)
 		throws com.liferay.portal.kernel.exception.SystemException {
 		Object returnObj = null;
 
 		MethodHandler methodHandler = new MethodHandler(_getCoutBannersByGroupIdMethodKey21,
-				groupId);
+				groupId, ClpSerializer.translateInput(portletId), plId);
 
 		try {
 			returnObj = _classLoaderProxy.invoke(methodHandler);
