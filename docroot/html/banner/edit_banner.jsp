@@ -75,8 +75,10 @@ portletURL.setWindowState(LiferayWindowState.POP_UP);
 	
 	<aui:input id="journal_imagegallery_button" inlineField="<%= true %>" label="image" name="journalImagegallery" size="55" type="text" />
 
-	<aui:button  value="select" onClick="showPopup()" />
-	
+	<img id="teste" src="" />
+
+
+	<aui:button  value="select" onClick="showGallery()"/>
 	
 	<aui:button name="save" type="submit" value="save" />
 	<aui:button name="cancel" type="button" value="cancel" onClick="<%= redirect %>" />
@@ -85,11 +87,15 @@ portletURL.setWindowState(LiferayWindowState.POP_UP);
 
 <aui:script>
 
-	Liferay.Util.focusFormField(<portlet:namespace />journal_imagegallery_button);
-
-	var url = "asdasd";
+	function showGallery() {
+		window.open(
+			'<%= portletURL.toString() %>', 'title', 'directories=no, height=640, location=no, menubar=no, resizable=yes, scrollbars=yes, status=no, toolbar=no, width=680');
+	}
 	
-	document.getElementById(<portlet:namespace />journal_imagegallery_button).value = url;
+	function <portlet:namespace />selectImageGallery(url) {
+		document.getElementById("<portlet:namespace />journal_imagegallery_button").value = url;
+		Liferay.Util.focusFormField(<portlet:namespace />journal_imagegallery_button);
+	}
 	
 	function showPopup() {
 		AUI().ready('aui-dialog','aui-dialog-iframe','liferay-portlet-url', function(A) {
@@ -108,7 +114,5 @@ portletURL.setWindowState(LiferayWindowState.POP_UP);
 	         	).render();     
 		}); 
 	}
-	
-	
 
 </aui:script>
