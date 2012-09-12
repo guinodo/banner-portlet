@@ -29,6 +29,7 @@ portletURL.setParameter("tabs1", tabs1);
  
 %>
 
+
 <liferay-ui:tabs 
 	names="banners-active,banners-inative" 
 	refresh="true" 

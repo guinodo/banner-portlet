@@ -6,18 +6,18 @@
 <%@ taglib uri="http://liferay.com/tld/ui" prefix="liferay-ui"%>
 <%@ taglib uri="http://liferay.com/tld/aui" prefix="aui"%>
 <%@ taglib uri="http://liferay.com/tld/theme" prefix="liferay-theme"%>
-
 <%@ taglib uri="http://java.sun.com/jstl/core_rt" prefix="c"%>
+
+<portlet:defineObjects />
+<liferay-theme:defineObjects />
 
 <%
 	
 	String redirect = PortalUtil.getCurrentURL(request);
-	long bannersCount = BannerLocalServiceUtil.getBannersByStatusCount(BannerKeys.ACTIVATED);
+	long bannersCount = BannerLocalServiceUtil.getBannersByStatusCount(BannerKeys.ACTIVATED, themeDisplay.getScopeGroupId(), portletDisplay.getId() , plid);
 	
 %>
 
-<portlet:defineObjects />
-<liferay-theme:defineObjects />
 
 <portlet:renderURL var="addBannerURL">
 	<portlet:param name="jspPage" value="/html/banner/add_banner.jsp" />
@@ -29,8 +29,8 @@
 <liferay-ui:search-container
 	emptyResultsMessage="banner-active-empty-results-message">
 	<liferay-ui:search-container-results
-		results="<%= BannerLocalServiceUtil.getBannersByStatusGroupId(BannerKeys.ACTIVATED, scopeGroupId, searchContainer.getStart(), searchContainer.getEnd()) %>"
-		total="<%= BannerLocalServiceUtil.getBannersByStatusCount(BannerKeys.ACTIVATED) %>" />
+		results="<%= BannerLocalServiceUtil.getBannersByStatusGroupId(BannerKeys.ACTIVATED, scopeGroupId, portletDisplay.getId() , plid, searchContainer.getStart(), searchContainer.getEnd()) %>"
+		total="<%= BannerLocalServiceUtil.getBannersByStatusCount(BannerKeys.ACTIVATED, scopeGroupId, portletDisplay.getId(), plid) %>" />
 
 	<liferay-ui:search-container-row
 		className="br.com.seatecnologia.banner.model.Banner"

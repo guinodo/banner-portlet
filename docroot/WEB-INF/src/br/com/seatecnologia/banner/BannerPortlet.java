@@ -5,18 +5,18 @@ import br.com.seatecnologia.banner.model.impl.BannerImpl;
 import br.com.seatecnologia.banner.service.BannerLocalServiceUtil;
 
 import com.liferay.counter.service.CounterLocalServiceUtil;
+import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.servlet.SessionErrors;
 import com.liferay.portal.kernel.servlet.SessionMessages;
+import com.liferay.portal.kernel.util.Constants;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.model.PortletPreferences;
-import com.liferay.portal.service.PortletPreferencesLocalServiceUtil;
 import com.liferay.portal.theme.ThemeDisplay;
 import com.liferay.portal.util.PortalUtil;
 import com.liferay.util.bridges.mvc.MVCPortlet;
-import com.liferay.util.portlet.PortletProps;
 
 import java.util.ArrayList;
 
@@ -30,8 +30,11 @@ import javax.portlet.PortletRequest;
 public class BannerPortlet extends MVCPortlet {
 	
 	public void addBanner(ActionRequest actionRequest, ActionResponse actionResponse) throws Exception{
-				
-		Banner banner = bannerFromRequest(actionRequest);
+		
+		Banner banner = new BannerImpl();
+		banner.setPrimaryKey(CounterLocalServiceUtil.increment(BannerPortlet.class.getName()));
+		
+		banner = bannerFromRequest(actionRequest, banner);
 		ArrayList<String> errors = new ArrayList<String>();
 		
 		if (BannerValidator.validateBanner(banner, errors)){
@@ -75,9 +78,9 @@ public class BannerPortlet extends MVCPortlet {
 				"/html/banner/edit.jsp");
 	}
 	
-	public void updateBanner(ActionRequest request, ActionResponse response) throws SystemException {
-		Banner banner = bannerFromRequest(request);
-		
+	public void updateBanner(ActionRequest request, ActionResponse response) throws SystemException, PortalException {
+		long bannerId = ParamUtil.getLong(request, "bannerId");
+		Banner banner = BannerLocalServiceUtil.getBanner(bannerId);
 		BannerLocalServiceUtil.updateBanner(banner);
 	}
 	
@@ -118,12 +121,11 @@ public class BannerPortlet extends MVCPortlet {
 	}
 	
 	
-	private BannerImpl bannerFromRequest(PortletRequest request) throws SystemException {
+	private Banner bannerFromRequest(PortletRequest request, Banner banner) throws SystemException {
 		ThemeDisplay themeDisplay = (ThemeDisplay) request.getAttribute(WebKeys.THEME_DISPLAY);
-		PortletPreferences portletPreferences = (PortletPreferences) request.getPreferences();
+		String portletId = (String) request.getAttribute(WebKeys.PORTLET_ID);
 		
-		BannerImpl banner = new BannerImpl();
-		banner.setPrimaryKey(CounterLocalServiceUtil.increment(BannerPortlet.class.getName()));
+		System.out.println("portletId>>"+portletId);
 		
 		banner.setName(ParamUtil.getString(request, "name"));
 		banner.setTitle(ParamUtil.getString(request, "title"));
@@ -133,8 +135,8 @@ public class BannerPortlet extends MVCPortlet {
 		banner.setPosition(BannerLocalServiceUtil.getBannersCount()+1);
 		banner.setType(ParamUtil.getInteger(request, "type"));
 		banner.setGroupId(themeDisplay.getScopeGroupId());
-		banner.setPortletId(portletPreferences.getPortletId());
-		banner.setPlId(portletPreferences.getPlid());
+		banner.setPortletId(portletId);
+		banner.setPlId(themeDisplay.getPlid());
 		
 		return banner;
 	}

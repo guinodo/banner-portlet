@@ -6,15 +6,12 @@
 <%@ taglib uri="http://liferay.com/tld/ui" prefix="liferay-ui" %>
 <%@ taglib uri="http://liferay.com/tld/aui" prefix="aui" %>
 <%@ taglib uri="http://liferay.com/tld/theme" prefix="liferay-theme" %>
-
-<%
-
-String redirect = PortalUtil.getCurrentURL(request);
-
-%>
-
 <portlet:defineObjects />
 <liferay-theme:defineObjects />
+<%
+String redirect = PortalUtil.getCurrentURL(request);
+%>
+
 
 <portlet:renderURL var="addBannerURL">
 		<portlet:param name="jspPage"
@@ -28,8 +25,8 @@ String redirect = PortalUtil.getCurrentURL(request);
 <liferay-ui:search-container
 	emptyResultsMessage="banner-empty-results-message">
 	<liferay-ui:search-container-results
-		results="<%= BannerLocalServiceUtil.getBannersByStatusGroupId(BannerKeys.INACTIVE, scopeGroupId, searchContainer.getStart(), searchContainer.getEnd()) %>"
-		total="<%= BannerLocalServiceUtil.getBannersByStatusCount(BannerKeys.INACTIVE) %>" />
+		results="<%= BannerLocalServiceUtil.getBannersByStatusGroupId(BannerKeys.INACTIVE, scopeGroupId, portletDisplay.getId() , plid, searchContainer.getStart(), searchContainer.getEnd()) %>"
+		total="<%= BannerLocalServiceUtil.getBannersByStatusCount(BannerKeys.INACTIVE, scopeGroupId, portletDisplay.getId(), plid) %>" />
 
 	<liferay-ui:search-container-row
 		className="br.com.seatecnologia.banner.model.Banner"

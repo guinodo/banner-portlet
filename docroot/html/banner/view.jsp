@@ -1,3 +1,4 @@
+<%@page import="com.liferay.portal.model.PortletPreferences"%>
 <%@page import="br.com.seatecnologia.banner.model.Banner"%>
 <%@page import="br.com.seatecnologia.banner.service.BannerLocalServiceUtil"%>
 <%@page import="java.util.List"%>
@@ -16,14 +17,18 @@
 <liferay-theme:defineObjects /> 
 <portlet:actionURL name="addBanner" var="saveBannerURL" />
 
+<%= plid %>
+<%= portletDisplay.getId() %>
+<%= themeDisplay.getPortletDisplay().getId() %>
+
 <%
 String currentURL = PortalUtil.getCurrentURL(request);
 
-
-List banners = BannerLocalServiceUtil.getBannersByStatus(BannerKeys.ACTIVATED);
+List<Banner> banners = BannerLocalServiceUtil.getBannersByStatus(BannerKeys.ACTIVATED, themeDisplay.getScopeGroupId(), portletDisplay.getId() , plid);
 
 if(banners.size()>0){
 %>
+
 	<div class="banner_estatico">
 	    <div class="banner_interno">
 	<%

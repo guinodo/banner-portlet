@@ -1,3 +1,7 @@
+<%@page import="javax.portlet.PortletURL"%>
+<%@page import="com.liferay.portal.util.PortletKeys"%>
+<%@page import="com.liferay.portal.service.GroupLocalServiceUtil"%>
+<%@page import="com.liferay.portal.model.Group"%>
 <%@page import="br.com.seatecnologia.banner.model.impl.BannerImpl"%>
 <%@page import="java.util.HashMap"%>
 <%@page import="java.util.Map"%>
@@ -30,6 +34,15 @@ int newsType = BannerKeys.NEWS;
 String type = ParamUtil.getString(request, "type");
 
 long groupId = ParamUtil.getLong(request, "groupId", scopeGroupId);
+
+Group group = GroupLocalServiceUtil.getGroup(groupId);
+
+PortletURL portletURL = renderResponse.createRenderURL();
+
+portletURL.setParameter("jspPage", "/html/banner/select_image_gallery.jsp");
+portletURL.setParameter("groupId", String.valueOf(groupId));
+portletURL.setWindowState(LiferayWindowState.POP_UP);
+
 %>
 
 
@@ -55,53 +68,47 @@ long groupId = ParamUtil.getLong(request, "groupId", scopeGroupId);
 	<aui:input name="title" label="title" size="50"	/>
 	<aui:input name="description" label="description" type="textarea" style="height: 105px; width: 500px;"	/>
 	<aui:input name="link" label="link" size="50" />
-	
-	<div dataType="image_gallery">
-			<aui:input cssClass="lfr-input-text-container" inlineField="<%= true %>" label="" name="image" size="55" type="text" />
-
-			<portlet:renderURL windowState="<%= LiferayWindowState.POP_UP.toString() %>" var="selectIGURL">
-				<portlet:param name="struts_action" value="/moderacaoportlet/add_banner" />
-				<portlet:param name="groupId" value="<%= String.valueOf(groupId) %>" /> 
-			</portlet:renderURL>
-
-			<%
-			Map<String,Object> data = new HashMap<String,Object>();
-
-			data.put("ImagegalleryUrl", selectIGURL);
-			%>
-
-			<aui:button cssClass="journal-imagegallery-button" value="select" />
-	</div>
 			
 	<aui:input label="approved" name="status" type="radio" checked="<%= BannerKeys.ACTIVATED == banner.getStatus() %>" />
 	<aui:input label="reproved" name="status" type="radio" checked="<%= BannerKeys.INACTIVE == banner.getStatus() %>" />
+	
+	
+	<aui:input id="journal_imagegallery_button" inlineField="<%= true %>" label="image" name="journalImagegallery" size="55" type="text" />
+
+	<aui:button  value="select" onClick="showPopup()" />
+	
 	
 	<aui:button name="save" type="submit" value="save" />
 	<aui:button name="cancel" type="button" value="cancel" onClick="<%= redirect %>" />
 </aui:fieldset>
 </aui:form>
 
+<aui:script>
 
+	Liferay.Util.focusFormField(<portlet:namespace />journal_imagegallery_button);
 
-<%-- <aui:script>
-	var <portlet:namespace />documentLibraryInput = null;
-	var <portlet:namespace />imageGalleryInput = null;
-	var <portlet:namespace />contentChangedFlag = false;
-
-	function <portlet:namespace />selectImageGallery(url) {
-		document.getElementById(<portlet:namespace />imageGalleryInput).value = url;
-	}
-
-</aui:script> --%>
-
-	<%-- <liferay-ui:error key="banner-image-required"
-			message="banner-image-required" />
-	<aui:input type="file" name="image" label="image"
-		value='<%= banner == null ? "" : banner.getImage() %>'
-	/>
+	var url = "asdasd";
 	
-	<aui:input name="position" label="position"
-		value='<%= banner == null ? "" : banner.getPosition() %>'
-	/> --%>
-		
- 	
+	document.getElementById(<portlet:namespace />journal_imagegallery_button).value = url;
+	
+	function showPopup() {
+		AUI().ready('aui-dialog','aui-dialog-iframe','liferay-portlet-url', function(A) {
+	         window.myDialog = new A.Dialog(             
+	         	{                 
+	         		title: 'Galeria de imagens',                 
+	         		width: 640,                 
+	         		centered: true             
+	         	}         
+	         	).plug(
+	         		A.Plugin.DialogIframe,             
+	         		{                 
+	         			uri: '<%= portletURL.toString() %>',                 
+	         			iframeCssClass: 'dialog-iframe'             
+	         		}         
+	         	).render();     
+		}); 
+	}
+	
+	
+
+</aui:script>
